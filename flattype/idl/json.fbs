@@ -1,0 +1,31 @@
+// Copyright 2018 Yeolar
+
+namespace flattype.fbs.json;
+
+union Type {
+    Null,
+    Bool,
+    Int64,
+    Double,
+    String,
+    Array,
+    Object,
+}
+
+table Pair {
+    key: Type;
+    value: Type;
+}
+
+table Null   { }
+table Bool   { value: bool; }
+table Int64  { value: long; }
+table Double { value: double; }
+table String { value: string; }
+table Array  { value: [Type]; }
+table Object { value: [Pair]; }
+table Matrix { value: [Array]; }
+
+table Json   { value: Type; }
+
+root_type Json;

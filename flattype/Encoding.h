@@ -27,13 +27,13 @@ namespace ftt {
 
 // null encoding
 inline ::flatbuffers::Offset<fbs::Null>
-encode(::flatbuffers::FlatBufferBuilder& fbb, const void*&) {
+encode(::flatbuffers::FlatBufferBuilder& fbb, const std::nullptr_t&) {
   return fbs::CreateNull(fbb);
 }
 
 // null decoding
 inline void
-decode(const void* ptr, void*& value) {
+decode(const void* ptr, std::nullptr_t& value) {
   value = nullptr;
 }
 
@@ -113,6 +113,19 @@ inline void
 decode(const void* ptr, acc::StringPiece& value) {
   auto p = reinterpret_cast<const fbs::String*>(ptr);
   value.reset(p->value()->data(), p->value()->size());
+}
+
+// const char* encoding
+inline ::flatbuffers::Offset<fbs::String>
+encode(::flatbuffers::FlatBufferBuilder& fbb, const char* value) {
+  return fbs::CreateString(fbb, fbb.CreateString(value));
+}
+
+// const char* decoding (no copy)
+inline void
+decode(const void* ptr, const char*& value) {
+  auto p = reinterpret_cast<const fbs::String*>(ptr);
+  value = p->value()->data();
 }
 
 #define FTT_BASE_ENCODE_ARRAY(t, ft) \
@@ -224,6 +237,26 @@ decode(const void* ptr, std::vector<acc::StringPiece>& value) {
   auto p = reinterpret_cast<const fbs::StringArray*>(ptr);
   for (auto i : *p->value()) {
     value.emplace_back(i->data(), i->size());
+  }
+}
+
+// vector<const char*> encoding
+inline ::flatbuffers::Offset<fbs::StringArray>
+encode(::flatbuffers::FlatBufferBuilder& fbb,
+       const std::vector<const char*>& value) {
+  std::vector<flatbuffers::Offset<flatbuffers::String>> v;
+  for (auto& i : value) {
+    v.push_back(fbb.CreateString(i));
+  }
+  return fbs::CreateStringArrayDirect(fbb, &v);
+}
+
+// vector<const char*> decoding (no copy)
+inline void
+decode(const void* ptr, std::vector<const char*>& value) {
+  auto p = reinterpret_cast<const fbs::StringArray*>(ptr);
+  for (auto i : *p->value()) {
+    value.push_back(i->data());
   }
 }
 

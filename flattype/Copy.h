@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+#pragma once
+
 #include "flattype/idl/base_generated.h"
 
 namespace ftt {

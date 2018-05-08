@@ -117,7 +117,7 @@ install(TARGETS flattype_shared
 # Test
 if(GTEST_FOUND)
     enable_testing()
-#    add_subdirectory(flattype/test)
+    add_subdirectory(flattype/test)
 endif()
 
 # Pack

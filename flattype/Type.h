@@ -40,7 +40,7 @@ struct AnyType<t> { \
   using type = fbs::aft; \
 };
 
-FTT_ANY_TYPE(void*,                 Null)
+FTT_ANY_TYPE(std::nullptr_t,        Null)
 FTT_ANY_TYPE(bool,                  Bool)
 FTT_ANY_TYPE(int8_t,                Int8)
 FTT_ANY_TYPE(int16_t,               Int16)
@@ -138,10 +138,10 @@ struct JsonType<t> { \
   using type = fbs::jft; \
 };
 
-FTT_JSON_TYPE(void*,   Null)
-FTT_JSON_TYPE(bool,    Bool)
-FTT_JSON_TYPE(int64_t, Int64)
-FTT_JSON_TYPE(double,  Double)
+FTT_JSON_TYPE(std::nullptr_t, Null)
+FTT_JSON_TYPE(bool,           Bool)
+FTT_JSON_TYPE(int64_t,        Int64)
+FTT_JSON_TYPE(double,         Double)
 
 #undef FTT_JSON_TYPE
 

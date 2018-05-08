@@ -16,8 +16,6 @@
 
 #pragma once
 
-#include "accelerator/Conv.h"
-#include "accelerator/Range.h"
 #include "flattype/idl/matrix_generated.h"
 #include "flattype/idl/object_generated.h"
 
@@ -67,7 +65,13 @@ template <class Tgt> void toAppend(const ftt::fbs::FloatArray&,  Tgt*);
 template <class Tgt> void toAppend(const ftt::fbs::DoubleArray&, Tgt*);
 template <class Tgt> void toAppend(const ftt::fbs::StringArray&, Tgt*);
 
+} // namespace acc
+
 //////////////////////////////////////////////////////////////////////
+
+#include "accelerator/Conv.h"
+
+namespace acc {
 
 template <class Tgt>
 inline void toAppend(const ::flatbuffers::String* value, Tgt* result) {

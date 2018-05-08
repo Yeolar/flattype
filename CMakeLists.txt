@@ -87,6 +87,7 @@ configure_file(
 
 # Work on all sub directories
 add_subdirectory(flattype)
+add_subdirectory(flattype/idl)
 
 add_library(flattype_static STATIC
     $<TARGET_OBJECTS:flattype_base>

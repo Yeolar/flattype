@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Yeolar/flattype.svg?branch=master)](https://travis-ci.org/Yeolar/flattype)
+[![Build Status](https://travis-ci.com/Yeolar/flattype.svg?branch=master)](https://travis-ci.com/Yeolar/flattype)
 
 flattype
 ========

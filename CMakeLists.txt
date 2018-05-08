@@ -86,30 +86,30 @@ configure_file(
 )
 
 # Work on all sub directories
-#add_subdirectory(flattype)
+add_subdirectory(flattype)
 
-#add_library(flattype_static STATIC
-#    $<TARGET_OBJECTS:flattype>
-#)
-#set_target_properties(flattype_static PROPERTIES OUTPUT_NAME flattype)
-#
-#add_library(flattype_shared SHARED
-#    $<TARGET_OBJECTS:flattype>
-#)
-#set_target_properties(flattype_shared PROPERTIES OUTPUT_NAME flattype)
+add_library(flattype_static STATIC
+    $<TARGET_OBJECTS:flattype_base>
+)
+set_target_properties(flattype_static PROPERTIES OUTPUT_NAME flattype)
 
-#install(TARGETS flattype_static
-#    DESTINATION lib
-#    PERMISSIONS OWNER_READ OWNER_WRITE
-#                GROUP_READ
-#                WORLD_READ
-#)
-#install(TARGETS flattype_shared
-#    DESTINATION lib
-#    PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE
-#                GROUP_READ GROUP_EXECUTE
-#                WORLD_READ WORLD_EXECUTE
-#)
+add_library(flattype_shared SHARED
+    $<TARGET_OBJECTS:flattype_base>
+)
+set_target_properties(flattype_shared PROPERTIES OUTPUT_NAME flattype)
+
+install(TARGETS flattype_static
+    DESTINATION lib
+    PERMISSIONS OWNER_READ OWNER_WRITE
+                GROUP_READ
+                WORLD_READ
+)
+install(TARGETS flattype_shared
+    DESTINATION lib
+    PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE
+                GROUP_READ GROUP_EXECUTE
+                WORLD_READ WORLD_EXECUTE
+)
 
 # Binary
 

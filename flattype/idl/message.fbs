@@ -1,0 +1,16 @@
+// Copyright 2018 Yeolar
+
+include "object.fbs";
+include "table.fbs";
+
+namespace ftt.fbs;
+
+table Message {
+    code: int;
+    message: string;
+    jdata: Object;
+    xdata: Table;
+}
+
+root_type Message;
+

@@ -1,10 +1,28 @@
 // Copyright 2018 Yeolar
 
-namespace flattype.fbs.matrix;
+include "base.fbs";
 
-table Array {
-value: [Item]`
+namespace ftt.fbs;
+
+union Any {
+    Null,
+    Bool,
+    Int8, Int16, Int32, Int64,
+    UInt8, UInt16, UInt32, UInt64,
+    Float, Double,
+    String,
+    BoolArray,
+    Int8Array, Int16Array, Int32Array, Int64Array,
+    UInt8Array, UInt16Array, UInt32Array, UInt64Array,
+    FloatArray, DoubleArray,
+    StringArray,
+    Tuple,
 }
-table Matrix {
-    value: [Array];
-}
+
+table Tuple  { value: [Any]; }
+table Item   { value: Any; }
+table Record { value: [Item]; }
+table Matrix { value: [Record]; }
+
+root_type Matrix;
+

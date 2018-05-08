@@ -34,3 +34,4 @@
 *.pyc
 
 /build/
+/flattype/flattype-config.h

@@ -1,0 +1,30 @@
+// Copyright 2018 Yeolar
+
+namespace ftt.fbs;
+
+table Null        { }
+table Bool        { value: bool; }
+table Int8        { value: byte; }
+table Int16       { value: short; }
+table Int32       { value: int; }
+table Int64       { value: long; }
+table UInt8       { value: ubyte; }
+table UInt16      { value: ushort; }
+table UInt32      { value: uint; }
+table UInt64      { value: ulong; }
+table Float       { value: float; }
+table Double      { value: double; }
+table String      { value: string; }
+table BoolArray   { value: [bool]; }
+table Int8Array   { value: [byte]; }
+table Int16Array  { value: [short]; }
+table Int32Array  { value: [int]; }
+table Int64Array  { value: [long]; }
+table UInt8Array  { value: [ubyte]; }
+table UInt16Array { value: [ushort]; }
+table UInt32Array { value: [uint]; }
+table UInt64Array { value: [ulong]; }
+table FloatArray  { value: [float]; }
+table DoubleArray { value: [double]; }
+table StringArray { value: [string]; }
+

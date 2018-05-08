@@ -1,0 +1,29 @@
+// Copyright 2018 Yeolar
+
+include "matrix.fbs";
+
+namespace ftt.fbs;
+
+union Key {
+    Key8, Key16, Key32, Key64, SKey,
+}
+
+table Key8  { key: ubyte  (key); pos: ubyte; }
+table Key16 { key: ushort (key); pos: ushort; }
+table Key32 { key: uint   (key); pos: uint; }
+table Key64 { key: ulong  (key); pos: ulong; }
+table SKey  { key: string (key); pos: ulong; }
+
+table Index {
+    key: string (key);
+    idx: [Key];
+}
+
+table Table {
+    indexes: [Index];
+    fields: [string];
+    matrix: Matrix;
+}
+
+root_type Table;
+

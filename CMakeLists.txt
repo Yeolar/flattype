@@ -88,6 +88,7 @@ configure_file(
 # Work on all sub directories
 add_subdirectory(flattype)
 add_subdirectory(flattype/idl)
+add_subdirectory(flattype/matrix)
 
 add_library(flattype_static STATIC
     $<TARGET_OBJECTS:flattype_base>
@@ -118,6 +119,7 @@ install(TARGETS flattype_shared
 if(GTEST_FOUND)
     enable_testing()
     add_subdirectory(flattype/test)
+    add_subdirectory(flattype/matrix/test)
 endif()
 
 # Pack

@@ -34,6 +34,28 @@ inline bool operator!=(
   return !(lhs == rhs);
 }
 
+template <class FT>
+inline bool operator==(
+    const ::flatbuffers::Vector<flatbuffers::Offset<FT>>& lhs,
+    const ::flatbuffers::Vector<flatbuffers::Offset<FT>>& rhs) {
+  if (lhs.size() != rhs.size()) {
+    return false;
+  }
+  for (::flatbuffers::uoffset_t i = 0; i < lhs.size(); i++) {
+    if (*lhs.Get(i) != *rhs.Get(i)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+template <class FT>
+inline bool operator!=(
+    const ::flatbuffers::Vector<::flatbuffers::Offset<FT>>& lhs,
+    const ::flatbuffers::Vector<::flatbuffers::Offset<FT>>& rhs) {
+  return !(lhs == rhs);
+}
+
 //////////////////////////////////////////////////////////////////////
 
 inline bool operator==(const fbs::Null& lhs, const fbs::Null& rhs) {
@@ -89,17 +111,7 @@ FTT_BASE_EQUAL_ARRAY(DoubleArray) // same as above
 
 inline bool operator==(
     const fbs::StringArray& lhs, const fbs::StringArray& rhs) {
-  auto lvalue = lhs.value();
-  auto rvalue = rhs.value();
-  if (lvalue->size() != rvalue->size()) {
-    return false;
-  }
-  for (::flatbuffers::uoffset_t i = 0; i < lvalue->size(); i++) {
-    if (*lvalue->Get(i) != *rvalue->Get(i)) {
-      return false;
-    }
-  }
-  return true;
+  return *lhs.value() == *rhs.value();
 }
 
 #define FTT_BASE_UNEQUAL(ft) \

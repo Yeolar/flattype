@@ -16,39 +16,34 @@
 
 #pragma once
 
-#include <string>
-
-#include "flattype/Encoding.h"
-#include "flattype/Type.h"
 #include "flattype/matrix/Encoding.h"
 
 namespace ftt {
 
-template <class T>
-::flatbuffers::DetachedBuffer serialize(const T& value) {
+template <class... Args>
+::flatbuffers::DetachedBuffer serializeVariant(const Args&... args) {
   ::flatbuffers::FlatBufferBuilder fbb;
-  fbb.Finish(encode(fbb, value));
+  fbb.Finish(vencode(fbb, args...));
   return fbb.Release();
 }
 
-template <class String, class T>
-String serializeToString(const T& value) {
-  auto buffer = serialize(value);
+template <class String, class... Args>
+String serializeVariant(const Args&... args) {
+  auto buffer = serializeVariant(args...);
   return String((char*)buffer.data(), buffer.size());
 }
 
-template <class T>
-void unserialize(const ::flatbuffers::DetachedBuffer& buffer, T& value) {
-  typedef typename AnyType<T>::type FT;
-  const FT* ptr = ::flatbuffers::GetRoot<FT>(buffer.data());
-  decode(ptr, value);
+template <class... Args>
+void unserializeVariant(const ::flatbuffers::DetachedBuffer& buffer,
+                        Args&... args) {
+  const fbs::Tuple* ptr = ::flatbuffers::GetRoot<fbs::Tuple>(buffer.data());
+  vdecode(ptr, args...);
 }
 
-template <class String, class T>
-void unserializeFromString(const String& in, T& value) {
-  typedef typename AnyType<T>::type FT;
-  const FT* ptr = ::flatbuffers::GetRoot<FT>(in.data());
-  decode(ptr, value);
+template <class String, class... Args>
+void unserializeVariant(const String& in, Args&... args) {
+  const fbs::Tuple* ptr = ::flatbuffers::GetRoot<fbs::Tuple>(in.data());
+  vdecode(ptr, args...);
 }
 
 } // namespace ftt

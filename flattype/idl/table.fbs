@@ -8,15 +8,15 @@ union Key {
     Key8, Key16, Key32, Key64, SKey,
 }
 
-table Key8  { key: ubyte  (key); pos: ubyte; }
-table Key16 { key: ushort (key); pos: ushort; }
-table Key32 { key: uint   (key); pos: uint; }
-table Key64 { key: ulong  (key); pos: ulong; }
-table SKey  { key: string (key); pos: ulong; }
+table Key8  { value: ubyte  (key); pos: ubyte; }
+table Key16 { value: ushort (key); pos: ushort; }
+table Key32 { value: uint   (key); pos: uint; }
+table Key64 { value: ulong  (key); pos: ulong; }
+table SKey  { value: string (key); pos: ulong; }
 
 table Index {
-    key: string (key);
-    idx: [Key];
+    name: string (key);
+    keys: [Key];
 }
 
 table Table {

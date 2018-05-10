@@ -89,6 +89,7 @@ configure_file(
 add_subdirectory(flattype)
 add_subdirectory(flattype/idl)
 add_subdirectory(flattype/matrix)
+add_subdirectory(flattype/message)
 
 add_library(flattype_static STATIC
     $<TARGET_OBJECTS:flattype_base>

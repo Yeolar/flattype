@@ -26,7 +26,7 @@ namespace ftt {
 using FBB = ::flatbuffers::FlatBufferBuilder;
 
 template <class FT>
-using FBBCallback = std::function<flatbuffers::Offset<FT>(FBB*)>;
+using FBBFunc = std::function<flatbuffers::Offset<FT>(FBB*)>;
 
 class Builder {
  public:

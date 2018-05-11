@@ -41,8 +41,8 @@ class MessageBuilder : public Builder {
   std::string getMessage() const;
   void setMessage(const std::string& msg);
 
-  void buildJData(FBBCallback<fbs::Object>&& builder);
-  void buildXData(FBBCallback<fbs::Table>&& builder);
+  void buildJData(FBBFunc<fbs::Object>&& builder);
+  void buildXData(FBBFunc<fbs::Table>&& builder);
 
   void finish() override;
 

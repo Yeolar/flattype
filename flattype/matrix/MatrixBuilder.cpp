@@ -14,41 +14,19 @@
  * limitations under the License.
  */
 
-#include "flattype/message/MessageBuilder.h"
+#include "flattype/matrix/MatrixBuilder.h"
 
 namespace ftt {
 
-int MessageBuilder::getCode() const {
-  return code_;
-}
-
-void MessageBuilder::setCode(int code) {
-  code_ = code;
-}
-
-std::string MessageBuilder::getMessage() const {
-  return message_;
-}
-
-void MessageBuilder::setMessage(const std::string& msg) {
-  message_ = msg;
-}
-
-void MessageBuilder::buildJData(FBBFunc<fbs::Object>&& builder) {
-  jdata_ = builder(fbb_.get());
-}
-
-void MessageBuilder::buildXData(FBBFunc<fbs::Table>&& builder) {
-  xdata_ = builder(fbb_.get());
-}
-
-void MessageBuilder::finish() {
+void MatrixBuilder::finish() {
   if (finished_) {
     return;
   }
-  fbb_->Finish(
-      fbs::CreateMessageDirect(
-          *fbb_, code_, message_.c_str(), jdata_, xdata_));
+  std::vector<flatbuffers::Offset<fbs::Record>> records;
+  for (auto& record : records_) {
+    records.push_back(fbs::CreateRecordDirect(*fbb_, &record));
+  }
+  fbb_->Finish(fbs::CreateMatrixDirect(*fbb_, &records));
   data_ = fbb_->Release();
   finished_ = true;
 }

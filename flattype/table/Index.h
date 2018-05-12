@@ -32,7 +32,7 @@ class IndexBase : public Wrapper<FT> {
   typedef typename vector::iterator iterator;
   typedef typename vector::const_iterator const_iterator;
 
-  static constexpr size_t npos = std::numeric_limits<index_type>::max();
+  static constexpr index_type npos = std::numeric_limits<index_type>::max();
 
  public:
   IndexBase(const FT* index) : Wrapper<FT>(index) {}

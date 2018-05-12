@@ -164,39 +164,10 @@ inline flatbuffers::Offset<Array> CreateArrayDirect(
 
 struct Pair FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum {
-    VT_KEY_TYPE = 4,
-    VT_KEY = 6,
-    VT_VALUE_TYPE = 8,
-    VT_VALUE = 10
+    VT_VALUE_TYPE = 4,
+    VT_VALUE = 6,
+    VT_NAME = 8
   };
-  Json key_type() const {
-    return static_cast<Json>(GetField<uint8_t>(VT_KEY_TYPE, 0));
-  }
-  const void *key() const {
-    return GetPointer<const void *>(VT_KEY);
-  }
-  template<typename T> const T *key_as() const;
-  const ftt::fbs::Null *key_as_Null() const {
-    return key_type() == Json_Null ? static_cast<const ftt::fbs::Null *>(key()) : nullptr;
-  }
-  const ftt::fbs::Bool *key_as_Bool() const {
-    return key_type() == Json_Bool ? static_cast<const ftt::fbs::Bool *>(key()) : nullptr;
-  }
-  const ftt::fbs::Int64 *key_as_Int64() const {
-    return key_type() == Json_Int64 ? static_cast<const ftt::fbs::Int64 *>(key()) : nullptr;
-  }
-  const ftt::fbs::Double *key_as_Double() const {
-    return key_type() == Json_Double ? static_cast<const ftt::fbs::Double *>(key()) : nullptr;
-  }
-  const ftt::fbs::String *key_as_String() const {
-    return key_type() == Json_String ? static_cast<const ftt::fbs::String *>(key()) : nullptr;
-  }
-  const Array *key_as_Array() const {
-    return key_type() == Json_Array ? static_cast<const Array *>(key()) : nullptr;
-  }
-  const Object *key_as_Object() const {
-    return key_type() == Json_Object ? static_cast<const Object *>(key()) : nullptr;
-  }
   Json value_type() const {
     return static_cast<Json>(GetField<uint8_t>(VT_VALUE_TYPE, 0));
   }
@@ -225,45 +196,25 @@ struct Pair FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   const Object *value_as_Object() const {
     return value_type() == Json_Object ? static_cast<const Object *>(value()) : nullptr;
   }
+  const flatbuffers::String *name() const {
+    return GetPointer<const flatbuffers::String *>(VT_NAME);
+  }
+  bool KeyCompareLessThan(const Pair *o) const {
+    return *name() < *o->name();
+  }
+  int KeyCompareWithValue(const char *val) const {
+    return strcmp(name()->c_str(), val);
+  }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyField<uint8_t>(verifier, VT_KEY_TYPE) &&
-           VerifyOffset(verifier, VT_KEY) &&
-           VerifyJson(verifier, key(), key_type()) &&
            VerifyField<uint8_t>(verifier, VT_VALUE_TYPE) &&
            VerifyOffset(verifier, VT_VALUE) &&
            VerifyJson(verifier, value(), value_type()) &&
+           VerifyOffsetRequired(verifier, VT_NAME) &&
+           verifier.Verify(name()) &&
            verifier.EndTable();
   }
 };
-
-template<> inline const ftt::fbs::Null *Pair::key_as<ftt::fbs::Null>() const {
-  return key_as_Null();
-}
-
-template<> inline const ftt::fbs::Bool *Pair::key_as<ftt::fbs::Bool>() const {
-  return key_as_Bool();
-}
-
-template<> inline const ftt::fbs::Int64 *Pair::key_as<ftt::fbs::Int64>() const {
-  return key_as_Int64();
-}
-
-template<> inline const ftt::fbs::Double *Pair::key_as<ftt::fbs::Double>() const {
-  return key_as_Double();
-}
-
-template<> inline const ftt::fbs::String *Pair::key_as<ftt::fbs::String>() const {
-  return key_as_String();
-}
-
-template<> inline const Array *Pair::key_as<Array>() const {
-  return key_as_Array();
-}
-
-template<> inline const Object *Pair::key_as<Object>() const {
-  return key_as_Object();
-}
 
 template<> inline const ftt::fbs::Null *Pair::value_as<ftt::fbs::Null>() const {
   return value_as_Null();
@@ -296,17 +247,14 @@ template<> inline const Object *Pair::value_as<Object>() const {
 struct PairBuilder {
   flatbuffers::FlatBufferBuilder &fbb_;
   flatbuffers::uoffset_t start_;
-  void add_key_type(Json key_type) {
-    fbb_.AddElement<uint8_t>(Pair::VT_KEY_TYPE, static_cast<uint8_t>(key_type), 0);
-  }
-  void add_key(flatbuffers::Offset<void> key) {
-    fbb_.AddOffset(Pair::VT_KEY, key);
-  }
   void add_value_type(Json value_type) {
     fbb_.AddElement<uint8_t>(Pair::VT_VALUE_TYPE, static_cast<uint8_t>(value_type), 0);
   }
   void add_value(flatbuffers::Offset<void> value) {
     fbb_.AddOffset(Pair::VT_VALUE, value);
+  }
+  void add_name(flatbuffers::Offset<flatbuffers::String> name) {
+    fbb_.AddOffset(Pair::VT_NAME, name);
   }
   PairBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -314,24 +262,35 @@ struct PairBuilder {
   }
   PairBuilder &operator=(const PairBuilder &);
   flatbuffers::Offset<Pair> Finish() {
-    const auto end = fbb_.EndTable(start_, 4);
+    const auto end = fbb_.EndTable(start_, 3);
     auto o = flatbuffers::Offset<Pair>(end);
+    fbb_.Required(o, Pair::VT_NAME);
     return o;
   }
 };
 
 inline flatbuffers::Offset<Pair> CreatePair(
     flatbuffers::FlatBufferBuilder &_fbb,
-    Json key_type = Json_NONE,
-    flatbuffers::Offset<void> key = 0,
     Json value_type = Json_NONE,
-    flatbuffers::Offset<void> value = 0) {
+    flatbuffers::Offset<void> value = 0,
+    flatbuffers::Offset<flatbuffers::String> name = 0) {
   PairBuilder builder_(_fbb);
+  builder_.add_name(name);
   builder_.add_value(value);
-  builder_.add_key(key);
   builder_.add_value_type(value_type);
-  builder_.add_key_type(key_type);
   return builder_.Finish();
+}
+
+inline flatbuffers::Offset<Pair> CreatePairDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    Json value_type = Json_NONE,
+    flatbuffers::Offset<void> value = 0,
+    const char *name = nullptr) {
+  return ftt::fbs::CreatePair(
+      _fbb,
+      value_type,
+      value,
+      name ? _fbb.CreateString(name) : 0);
 }
 
 struct Object FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {

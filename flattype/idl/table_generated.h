@@ -105,7 +105,8 @@ bool VerifyIndexVector(flatbuffers::Verifier &verifier, const flatbuffers::Vecto
 struct Key8 FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum {
     VT_K = 4,
-    VT_I = 6
+    VT_B = 6,
+    VT_I = 8
   };
   uint8_t k() const {
     return GetField<uint8_t>(VT_K, 0);
@@ -123,12 +124,16 @@ struct Key8 FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
       return 0;
     }
   }
+  uint8_t b() const {
+    return GetField<uint8_t>(VT_B, 0);
+  }
   uint8_t i() const {
     return GetField<uint8_t>(VT_I, 0);
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint8_t>(verifier, VT_K) &&
+           VerifyField<uint8_t>(verifier, VT_B) &&
            VerifyField<uint8_t>(verifier, VT_I) &&
            verifier.EndTable();
   }
@@ -140,6 +145,9 @@ struct Key8Builder {
   void add_k(uint8_t k) {
     fbb_.AddElement<uint8_t>(Key8::VT_K, k, 0);
   }
+  void add_b(uint8_t b) {
+    fbb_.AddElement<uint8_t>(Key8::VT_B, b, 0);
+  }
   void add_i(uint8_t i) {
     fbb_.AddElement<uint8_t>(Key8::VT_I, i, 0);
   }
@@ -149,7 +157,7 @@ struct Key8Builder {
   }
   Key8Builder &operator=(const Key8Builder &);
   flatbuffers::Offset<Key8> Finish() {
-    const auto end = fbb_.EndTable(start_, 2);
+    const auto end = fbb_.EndTable(start_, 3);
     auto o = flatbuffers::Offset<Key8>(end);
     return o;
   }
@@ -158,9 +166,11 @@ struct Key8Builder {
 inline flatbuffers::Offset<Key8> CreateKey8(
     flatbuffers::FlatBufferBuilder &_fbb,
     uint8_t k = 0,
+    uint8_t b = 0,
     uint8_t i = 0) {
   Key8Builder builder_(_fbb);
   builder_.add_i(i);
+  builder_.add_b(b);
   builder_.add_k(k);
   return builder_.Finish();
 }
@@ -168,7 +178,8 @@ inline flatbuffers::Offset<Key8> CreateKey8(
 struct Key16 FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum {
     VT_K = 4,
-    VT_I = 6
+    VT_B = 6,
+    VT_I = 8
   };
   uint16_t k() const {
     return GetField<uint16_t>(VT_K, 0);
@@ -186,12 +197,16 @@ struct Key16 FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
       return 0;
     }
   }
+  uint8_t b() const {
+    return GetField<uint8_t>(VT_B, 0);
+  }
   uint16_t i() const {
     return GetField<uint16_t>(VT_I, 0);
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint16_t>(verifier, VT_K) &&
+           VerifyField<uint8_t>(verifier, VT_B) &&
            VerifyField<uint16_t>(verifier, VT_I) &&
            verifier.EndTable();
   }
@@ -203,6 +218,9 @@ struct Key16Builder {
   void add_k(uint16_t k) {
     fbb_.AddElement<uint16_t>(Key16::VT_K, k, 0);
   }
+  void add_b(uint8_t b) {
+    fbb_.AddElement<uint8_t>(Key16::VT_B, b, 0);
+  }
   void add_i(uint16_t i) {
     fbb_.AddElement<uint16_t>(Key16::VT_I, i, 0);
   }
@@ -212,7 +230,7 @@ struct Key16Builder {
   }
   Key16Builder &operator=(const Key16Builder &);
   flatbuffers::Offset<Key16> Finish() {
-    const auto end = fbb_.EndTable(start_, 2);
+    const auto end = fbb_.EndTable(start_, 3);
     auto o = flatbuffers::Offset<Key16>(end);
     return o;
   }
@@ -221,17 +239,20 @@ struct Key16Builder {
 inline flatbuffers::Offset<Key16> CreateKey16(
     flatbuffers::FlatBufferBuilder &_fbb,
     uint16_t k = 0,
+    uint8_t b = 0,
     uint16_t i = 0) {
   Key16Builder builder_(_fbb);
   builder_.add_i(i);
   builder_.add_k(k);
+  builder_.add_b(b);
   return builder_.Finish();
 }
 
 struct Key32 FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum {
     VT_K = 4,
-    VT_I = 6
+    VT_B = 6,
+    VT_I = 8
   };
   uint32_t k() const {
     return GetField<uint32_t>(VT_K, 0);
@@ -249,12 +270,16 @@ struct Key32 FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
       return 0;
     }
   }
+  uint8_t b() const {
+    return GetField<uint8_t>(VT_B, 0);
+  }
   uint32_t i() const {
     return GetField<uint32_t>(VT_I, 0);
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint32_t>(verifier, VT_K) &&
+           VerifyField<uint8_t>(verifier, VT_B) &&
            VerifyField<uint32_t>(verifier, VT_I) &&
            verifier.EndTable();
   }
@@ -266,6 +291,9 @@ struct Key32Builder {
   void add_k(uint32_t k) {
     fbb_.AddElement<uint32_t>(Key32::VT_K, k, 0);
   }
+  void add_b(uint8_t b) {
+    fbb_.AddElement<uint8_t>(Key32::VT_B, b, 0);
+  }
   void add_i(uint32_t i) {
     fbb_.AddElement<uint32_t>(Key32::VT_I, i, 0);
   }
@@ -275,7 +303,7 @@ struct Key32Builder {
   }
   Key32Builder &operator=(const Key32Builder &);
   flatbuffers::Offset<Key32> Finish() {
-    const auto end = fbb_.EndTable(start_, 2);
+    const auto end = fbb_.EndTable(start_, 3);
     auto o = flatbuffers::Offset<Key32>(end);
     return o;
   }
@@ -284,17 +312,20 @@ struct Key32Builder {
 inline flatbuffers::Offset<Key32> CreateKey32(
     flatbuffers::FlatBufferBuilder &_fbb,
     uint32_t k = 0,
+    uint8_t b = 0,
     uint32_t i = 0) {
   Key32Builder builder_(_fbb);
   builder_.add_i(i);
   builder_.add_k(k);
+  builder_.add_b(b);
   return builder_.Finish();
 }
 
 struct Key64 FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum {
     VT_K = 4,
-    VT_I = 6
+    VT_B = 6,
+    VT_I = 8
   };
   uint64_t k() const {
     return GetField<uint64_t>(VT_K, 0);
@@ -312,12 +343,16 @@ struct Key64 FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
       return 0;
     }
   }
+  uint8_t b() const {
+    return GetField<uint8_t>(VT_B, 0);
+  }
   uint64_t i() const {
     return GetField<uint64_t>(VT_I, 0);
   }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyField<uint64_t>(verifier, VT_K) &&
+           VerifyField<uint8_t>(verifier, VT_B) &&
            VerifyField<uint64_t>(verifier, VT_I) &&
            verifier.EndTable();
   }
@@ -329,6 +364,9 @@ struct Key64Builder {
   void add_k(uint64_t k) {
     fbb_.AddElement<uint64_t>(Key64::VT_K, k, 0);
   }
+  void add_b(uint8_t b) {
+    fbb_.AddElement<uint8_t>(Key64::VT_B, b, 0);
+  }
   void add_i(uint64_t i) {
     fbb_.AddElement<uint64_t>(Key64::VT_I, i, 0);
   }
@@ -338,7 +376,7 @@ struct Key64Builder {
   }
   Key64Builder &operator=(const Key64Builder &);
   flatbuffers::Offset<Key64> Finish() {
-    const auto end = fbb_.EndTable(start_, 2);
+    const auto end = fbb_.EndTable(start_, 3);
     auto o = flatbuffers::Offset<Key64>(end);
     return o;
   }
@@ -347,17 +385,20 @@ struct Key64Builder {
 inline flatbuffers::Offset<Key64> CreateKey64(
     flatbuffers::FlatBufferBuilder &_fbb,
     uint64_t k = 0,
+    uint8_t b = 0,
     uint64_t i = 0) {
   Key64Builder builder_(_fbb);
   builder_.add_i(i);
   builder_.add_k(k);
+  builder_.add_b(b);
   return builder_.Finish();
 }
 
 struct SKey FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum {
     VT_K = 4,
-    VT_I = 6
+    VT_B = 6,
+    VT_I = 8
   };
   const flatbuffers::String *k() const {
     return GetPointer<const flatbuffers::String *>(VT_K);
@@ -368,6 +409,9 @@ struct SKey FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   int KeyCompareWithValue(const char *val) const {
     return strcmp(k()->c_str(), val);
   }
+  uint8_t b() const {
+    return GetField<uint8_t>(VT_B, 0);
+  }
   uint64_t i() const {
     return GetField<uint64_t>(VT_I, 0);
   }
@@ -375,6 +419,7 @@ struct SKey FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
     return VerifyTableStart(verifier) &&
            VerifyOffsetRequired(verifier, VT_K) &&
            verifier.Verify(k()) &&
+           VerifyField<uint8_t>(verifier, VT_B) &&
            VerifyField<uint64_t>(verifier, VT_I) &&
            verifier.EndTable();
   }
@@ -386,6 +431,9 @@ struct SKeyBuilder {
   void add_k(flatbuffers::Offset<flatbuffers::String> k) {
     fbb_.AddOffset(SKey::VT_K, k);
   }
+  void add_b(uint8_t b) {
+    fbb_.AddElement<uint8_t>(SKey::VT_B, b, 0);
+  }
   void add_i(uint64_t i) {
     fbb_.AddElement<uint64_t>(SKey::VT_I, i, 0);
   }
@@ -395,7 +443,7 @@ struct SKeyBuilder {
   }
   SKeyBuilder &operator=(const SKeyBuilder &);
   flatbuffers::Offset<SKey> Finish() {
-    const auto end = fbb_.EndTable(start_, 2);
+    const auto end = fbb_.EndTable(start_, 3);
     auto o = flatbuffers::Offset<SKey>(end);
     fbb_.Required(o, SKey::VT_K);
     return o;
@@ -405,20 +453,24 @@ struct SKeyBuilder {
 inline flatbuffers::Offset<SKey> CreateSKey(
     flatbuffers::FlatBufferBuilder &_fbb,
     flatbuffers::Offset<flatbuffers::String> k = 0,
+    uint8_t b = 0,
     uint64_t i = 0) {
   SKeyBuilder builder_(_fbb);
   builder_.add_i(i);
   builder_.add_k(k);
+  builder_.add_b(b);
   return builder_.Finish();
 }
 
 inline flatbuffers::Offset<SKey> CreateSKeyDirect(
     flatbuffers::FlatBufferBuilder &_fbb,
     const char *k = nullptr,
+    uint8_t b = 0,
     uint64_t i = 0) {
   return ftt::fbs::CreateSKey(
       _fbb,
       k ? _fbb.CreateString(k) : 0,
+      b,
       i);
 }
 
@@ -779,35 +831,33 @@ inline flatbuffers::Offset<SIndex> CreateSIndexDirect(
 
 struct Table FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum {
-    VT_MATRIX = 4,
-    VT_FIELDS = 6,
-    VT_IIDXES_TYPE = 8,
-    VT_IIDXES = 10
+    VT_BID = 4,
+    VT_NAME = 6,
+    VT_MATRIX = 8,
+    VT_FIELDS = 10
   };
+  uint8_t bid() const {
+    return GetField<uint8_t>(VT_BID, 0);
+  }
+  const flatbuffers::String *name() const {
+    return GetPointer<const flatbuffers::String *>(VT_NAME);
+  }
   const ftt::fbs::Matrix *matrix() const {
     return GetPointer<const ftt::fbs::Matrix *>(VT_MATRIX);
   }
   const flatbuffers::Vector<flatbuffers::Offset<flatbuffers::String>> *fields() const {
     return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<flatbuffers::String>> *>(VT_FIELDS);
   }
-  const flatbuffers::Vector<uint8_t> *iidxes_type() const {
-    return GetPointer<const flatbuffers::Vector<uint8_t> *>(VT_IIDXES_TYPE);
-  }
-  const flatbuffers::Vector<flatbuffers::Offset<void>> *iidxes() const {
-    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<void>> *>(VT_IIDXES);
-  }
   bool Verify(flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
+           VerifyField<uint8_t>(verifier, VT_BID) &&
+           VerifyOffset(verifier, VT_NAME) &&
+           verifier.Verify(name()) &&
            VerifyOffset(verifier, VT_MATRIX) &&
            verifier.VerifyTable(matrix()) &&
            VerifyOffset(verifier, VT_FIELDS) &&
            verifier.Verify(fields()) &&
            verifier.VerifyVectorOfStrings(fields()) &&
-           VerifyOffset(verifier, VT_IIDXES_TYPE) &&
-           verifier.Verify(iidxes_type()) &&
-           VerifyOffset(verifier, VT_IIDXES) &&
-           verifier.Verify(iidxes()) &&
-           VerifyIndexVector(verifier, iidxes(), iidxes_type()) &&
            verifier.EndTable();
   }
 };
@@ -815,17 +865,17 @@ struct Table FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
 struct TableBuilder {
   flatbuffers::FlatBufferBuilder &fbb_;
   flatbuffers::uoffset_t start_;
+  void add_bid(uint8_t bid) {
+    fbb_.AddElement<uint8_t>(Table::VT_BID, bid, 0);
+  }
+  void add_name(flatbuffers::Offset<flatbuffers::String> name) {
+    fbb_.AddOffset(Table::VT_NAME, name);
+  }
   void add_matrix(flatbuffers::Offset<ftt::fbs::Matrix> matrix) {
     fbb_.AddOffset(Table::VT_MATRIX, matrix);
   }
   void add_fields(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<flatbuffers::String>>> fields) {
     fbb_.AddOffset(Table::VT_FIELDS, fields);
-  }
-  void add_iidxes_type(flatbuffers::Offset<flatbuffers::Vector<uint8_t>> iidxes_type) {
-    fbb_.AddOffset(Table::VT_IIDXES_TYPE, iidxes_type);
-  }
-  void add_iidxes(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<void>>> iidxes) {
-    fbb_.AddOffset(Table::VT_IIDXES, iidxes);
   }
   TableBuilder(flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -841,30 +891,30 @@ struct TableBuilder {
 
 inline flatbuffers::Offset<Table> CreateTable(
     flatbuffers::FlatBufferBuilder &_fbb,
+    uint8_t bid = 0,
+    flatbuffers::Offset<flatbuffers::String> name = 0,
     flatbuffers::Offset<ftt::fbs::Matrix> matrix = 0,
-    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<flatbuffers::String>>> fields = 0,
-    flatbuffers::Offset<flatbuffers::Vector<uint8_t>> iidxes_type = 0,
-    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<void>>> iidxes = 0) {
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<flatbuffers::String>>> fields = 0) {
   TableBuilder builder_(_fbb);
-  builder_.add_iidxes(iidxes);
-  builder_.add_iidxes_type(iidxes_type);
   builder_.add_fields(fields);
   builder_.add_matrix(matrix);
+  builder_.add_name(name);
+  builder_.add_bid(bid);
   return builder_.Finish();
 }
 
 inline flatbuffers::Offset<Table> CreateTableDirect(
     flatbuffers::FlatBufferBuilder &_fbb,
+    uint8_t bid = 0,
+    const char *name = nullptr,
     flatbuffers::Offset<ftt::fbs::Matrix> matrix = 0,
-    const std::vector<flatbuffers::Offset<flatbuffers::String>> *fields = nullptr,
-    const std::vector<uint8_t> *iidxes_type = nullptr,
-    const std::vector<flatbuffers::Offset<void>> *iidxes = nullptr) {
+    const std::vector<flatbuffers::Offset<flatbuffers::String>> *fields = nullptr) {
   return ftt::fbs::CreateTable(
       _fbb,
+      bid,
+      name ? _fbb.CreateString(name) : 0,
       matrix,
-      fields ? _fbb.CreateVector<flatbuffers::Offset<flatbuffers::String>>(*fields) : 0,
-      iidxes_type ? _fbb.CreateVector<uint8_t>(*iidxes_type) : 0,
-      iidxes ? _fbb.CreateVector<flatbuffers::Offset<void>>(*iidxes) : 0);
+      fields ? _fbb.CreateVector<flatbuffers::Offset<flatbuffers::String>>(*fields) : 0);
 }
 
 inline bool VerifyIndex(flatbuffers::Verifier &verifier, const void *obj, Index type) {

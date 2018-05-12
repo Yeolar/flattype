@@ -15,7 +15,7 @@ union Json {
 }
 
 table Array  { value: [Json]; }
-table Pair   { key: Json; value: Json; }
+table Pair   { value: Json; name: string (key); }
 table Object { value: [Pair]; }
 
 root_type Object;

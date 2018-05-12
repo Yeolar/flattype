@@ -22,8 +22,11 @@ void Index8Builder::finish() {
   if (finished_) {
     return;
   }
-  IndexBuilderBase<fbs::Index8,fbs::Key8,uint8_t,uint8_t>::sort();
-  fbb_->Finish(fbs::CreateIndex8Direct(*fbb_, name_.c_str(), &keys_));
+  fbb_->Finish(
+      fbs::CreateIndex8(
+          *fbb_,
+          fbb_->CreateString(name_),
+          fbb_->CreateVectorOfSortedTables(&keys_)));
   data_ = fbb_->Release();
   finished_ = true;
 }
@@ -32,8 +35,11 @@ void Index16Builder::finish() {
   if (finished_) {
     return;
   }
-  IndexBuilderBase<fbs::Index16,fbs::Key16,uint16_t,uint16_t>::sort();
-  fbb_->Finish(fbs::CreateIndex16Direct(*fbb_, name_.c_str(), &keys_));
+  fbb_->Finish(
+      fbs::CreateIndex16(
+          *fbb_,
+          fbb_->CreateString(name_),
+          fbb_->CreateVectorOfSortedTables(&keys_)));
   data_ = fbb_->Release();
   finished_ = true;
 }
@@ -42,8 +48,11 @@ void Index32Builder::finish() {
   if (finished_) {
     return;
   }
-  IndexBuilderBase<fbs::Index32,fbs::Key32,uint32_t,uint32_t>::sort();
-  fbb_->Finish(fbs::CreateIndex32Direct(*fbb_, name_.c_str(), &keys_));
+  fbb_->Finish(
+      fbs::CreateIndex32(
+          *fbb_,
+          fbb_->CreateString(name_),
+          fbb_->CreateVectorOfSortedTables(&keys_)));
   data_ = fbb_->Release();
   finished_ = true;
 }
@@ -52,8 +61,11 @@ void Index64Builder::finish() {
   if (finished_) {
     return;
   }
-  IndexBuilderBase<fbs::Index64,fbs::Key64,uint64_t,uint64_t>::sort();
-  fbb_->Finish(fbs::CreateIndex64Direct(*fbb_, name_.c_str(), &keys_));
+  fbb_->Finish(
+      fbs::CreateIndex64(
+          *fbb_,
+          fbb_->CreateString(name_),
+          fbb_->CreateVectorOfSortedTables(&keys_)));
   data_ = fbb_->Release();
   finished_ = true;
 }
@@ -62,8 +74,11 @@ void SIndexBuilder::finish() {
   if (finished_) {
     return;
   }
-  IndexBuilderBase<fbs::SIndex,fbs::SKey,std::string,uint64_t>::sort();
-  fbb_->Finish(fbs::CreateSIndexDirect(*fbb_, name_.c_str(), &keys_));
+  fbb_->Finish(
+      fbs::CreateSIndex(
+          *fbb_,
+          fbb_->CreateString(name_),
+          fbb_->CreateVectorOfSortedTables(&keys_)));
   data_ = fbb_->Release();
   finished_ = true;
 }

@@ -55,16 +55,6 @@ class IndexBuilderBase : public Builder {
   }
 
  protected:
-  void sort() {
-    std::sort(keys_.begin(), keys_.end(),
-              [&](const typename Index::offset& a,
-                  const typename Index::offset& b) -> bool {
-                auto x = ::flatbuffers::GetTemporaryPointer(*fbb_, a);
-                auto y = ::flatbuffers::GetTemporaryPointer(*fbb_, b);
-                return x->KeyCompareLessThan(y);
-              });
-  }
-
   std::string name_;
   std::vector<typename Index::offset> keys_;
 };

@@ -43,7 +43,7 @@ std::string Table::getName() const {
 
 std::vector<std::string> Table::getFields() const {
   std::vector<std::string> fields;
-  if (ptr_) {
+  if (ptr_ && ptr_->fields()) {
     for (auto i : *ptr_->fields()) {
       fields.push_back(i->str());
     }

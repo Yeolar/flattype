@@ -61,4 +61,29 @@ findConst(const ::flatbuffers::Vector<T>* vector, const K& key) {
       vector, key);
 }
 
+//////////////////////////////////////////////////////////////////////
+
+template <class FT>
+inline size_t size(const FT* array) {
+  return array->value()->size();
+}
+
+template <class FT>
+inline auto at(const FT* array, size_t i)
+  -> decltype(array->value()->Get(i)) {
+  return array->value()->Get(i);
+}
+
+template <class FT>
+inline auto begin(const FT* array)
+  -> decltype(array->value()->begin()) {
+  return array->value()->begin();
+}
+
+template <class FT>
+inline auto end(const FT* array)
+  -> decltype(array->value()->end()) {
+  return array->value()->end();
+}
+
 } // namespace ftt

@@ -11,9 +11,9 @@
 namespace ftt {
 namespace fbs {
 
-struct Array;
-
 struct Pair;
+
+struct Array;
 
 struct Object;
 
@@ -98,69 +98,6 @@ template<> struct JsonTraits<Object> {
 
 bool VerifyJson(flatbuffers::Verifier &verifier, const void *obj, Json type);
 bool VerifyJsonVector(flatbuffers::Verifier &verifier, const flatbuffers::Vector<flatbuffers::Offset<void>> *values, const flatbuffers::Vector<uint8_t> *types);
-
-struct Array FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
-  enum {
-    VT_VALUE_TYPE = 4,
-    VT_VALUE = 6
-  };
-  const flatbuffers::Vector<uint8_t> *value_type() const {
-    return GetPointer<const flatbuffers::Vector<uint8_t> *>(VT_VALUE_TYPE);
-  }
-  const flatbuffers::Vector<flatbuffers::Offset<void>> *value() const {
-    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<void>> *>(VT_VALUE);
-  }
-  bool Verify(flatbuffers::Verifier &verifier) const {
-    return VerifyTableStart(verifier) &&
-           VerifyOffset(verifier, VT_VALUE_TYPE) &&
-           verifier.Verify(value_type()) &&
-           VerifyOffset(verifier, VT_VALUE) &&
-           verifier.Verify(value()) &&
-           VerifyJsonVector(verifier, value(), value_type()) &&
-           verifier.EndTable();
-  }
-};
-
-struct ArrayBuilder {
-  flatbuffers::FlatBufferBuilder &fbb_;
-  flatbuffers::uoffset_t start_;
-  void add_value_type(flatbuffers::Offset<flatbuffers::Vector<uint8_t>> value_type) {
-    fbb_.AddOffset(Array::VT_VALUE_TYPE, value_type);
-  }
-  void add_value(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<void>>> value) {
-    fbb_.AddOffset(Array::VT_VALUE, value);
-  }
-  ArrayBuilder(flatbuffers::FlatBufferBuilder &_fbb)
-        : fbb_(_fbb) {
-    start_ = fbb_.StartTable();
-  }
-  ArrayBuilder &operator=(const ArrayBuilder &);
-  flatbuffers::Offset<Array> Finish() {
-    const auto end = fbb_.EndTable(start_, 2);
-    auto o = flatbuffers::Offset<Array>(end);
-    return o;
-  }
-};
-
-inline flatbuffers::Offset<Array> CreateArray(
-    flatbuffers::FlatBufferBuilder &_fbb,
-    flatbuffers::Offset<flatbuffers::Vector<uint8_t>> value_type = 0,
-    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<void>>> value = 0) {
-  ArrayBuilder builder_(_fbb);
-  builder_.add_value(value);
-  builder_.add_value_type(value_type);
-  return builder_.Finish();
-}
-
-inline flatbuffers::Offset<Array> CreateArrayDirect(
-    flatbuffers::FlatBufferBuilder &_fbb,
-    const std::vector<uint8_t> *value_type = nullptr,
-    const std::vector<flatbuffers::Offset<void>> *value = nullptr) {
-  return ftt::fbs::CreateArray(
-      _fbb,
-      value_type ? _fbb.CreateVector<uint8_t>(*value_type) : 0,
-      value ? _fbb.CreateVector<flatbuffers::Offset<void>>(*value) : 0);
-}
 
 struct Pair FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   enum {
@@ -291,6 +228,69 @@ inline flatbuffers::Offset<Pair> CreatePairDirect(
       value_type,
       value,
       name ? _fbb.CreateString(name) : 0);
+}
+
+struct Array FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  enum {
+    VT_VALUE_TYPE = 4,
+    VT_VALUE = 6
+  };
+  const flatbuffers::Vector<uint8_t> *value_type() const {
+    return GetPointer<const flatbuffers::Vector<uint8_t> *>(VT_VALUE_TYPE);
+  }
+  const flatbuffers::Vector<flatbuffers::Offset<void>> *value() const {
+    return GetPointer<const flatbuffers::Vector<flatbuffers::Offset<void>> *>(VT_VALUE);
+  }
+  bool Verify(flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_VALUE_TYPE) &&
+           verifier.Verify(value_type()) &&
+           VerifyOffset(verifier, VT_VALUE) &&
+           verifier.Verify(value()) &&
+           VerifyJsonVector(verifier, value(), value_type()) &&
+           verifier.EndTable();
+  }
+};
+
+struct ArrayBuilder {
+  flatbuffers::FlatBufferBuilder &fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_value_type(flatbuffers::Offset<flatbuffers::Vector<uint8_t>> value_type) {
+    fbb_.AddOffset(Array::VT_VALUE_TYPE, value_type);
+  }
+  void add_value(flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<void>>> value) {
+    fbb_.AddOffset(Array::VT_VALUE, value);
+  }
+  ArrayBuilder(flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ArrayBuilder &operator=(const ArrayBuilder &);
+  flatbuffers::Offset<Array> Finish() {
+    const auto end = fbb_.EndTable(start_, 2);
+    auto o = flatbuffers::Offset<Array>(end);
+    return o;
+  }
+};
+
+inline flatbuffers::Offset<Array> CreateArray(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    flatbuffers::Offset<flatbuffers::Vector<uint8_t>> value_type = 0,
+    flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<void>>> value = 0) {
+  ArrayBuilder builder_(_fbb);
+  builder_.add_value(value);
+  builder_.add_value_type(value_type);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<Array> CreateArrayDirect(
+    flatbuffers::FlatBufferBuilder &_fbb,
+    const std::vector<uint8_t> *value_type = nullptr,
+    const std::vector<flatbuffers::Offset<void>> *value = nullptr) {
+  return ftt::fbs::CreateArray(
+      _fbb,
+      value_type ? _fbb.CreateVector<uint8_t>(*value_type) : 0,
+      value ? _fbb.CreateVector<flatbuffers::Offset<void>>(*value) : 0);
 }
 
 struct Object FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {

@@ -16,16 +16,21 @@
 
 #include "accelerator/Conv.h"
 #include "flattype/message/Message.h"
+#include "flattype/table/Table.h"
 
 namespace ftt {
 
 std::string Message::toDebugString() const {
   std::string out;
-  if (get()) {
-    acc::toAppend("code:", getCode(), ", message:", getMessage(), &out);
-    //if (getJData()) acc::toAppend(", jdata:", *getJData(), &out);
-    //if (getXData()) acc::toAppend(", xdata:", *getXData(), &out);
+  if (!get()) {
+    return "Message::<NULL>";
   }
+  acc::toAppend("Message::",
+                ", code:", getCode(),
+                ", message:", getMessage(),
+                ", xdata:", Table(getXData()).toDebugString(),
+                &out);
+  //if (getJData()) acc::toAppend(", jdata:", *getJData(), &out);
   return out;
 }
 

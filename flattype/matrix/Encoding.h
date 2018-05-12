@@ -200,7 +200,7 @@ vdecode(const fbs::Tuple* ptr, Args&... args) {
 // Item decoding
 template <class T>
 inline void
-decode(fbs::Item* item, T& value) {
+decode(const fbs::Item* item, T& value) {
   assert(item->value_type() == getAnyType<T>());
   decode(item->value(), value);
 }
@@ -208,40 +208,40 @@ decode(fbs::Item* item, T& value) {
 // Record decoding
 template <int I, class T>
 inline void
-decode(fbs::Record* record, T& arg) {
+decode(const fbs::Record* record, T& arg) {
   decode(record->value()->Get(I), arg);
 }
 
 template <int I, class T, class... Args>
 inline void
-decode(fbs::Record* record, T& arg, Args&... args) {
+decode(const fbs::Record* record, T& arg, Args&... args) {
   decode<I>(record, arg);
   decode<I+1>(record, args...);
 }
 
 template <class... Args>
 inline void
-decode(fbs::Record* record, Args&... args) {
+decode(const fbs::Record* record, Args&... args) {
   decode<0>(record, args...);
 }
 
 // Matrix decoding
 template <int I, class T>
 inline void
-decodeOne(fbs::Matrix* matrix, size_t j, T& arg) {
+decodeOne(const fbs::Matrix* matrix, size_t j, T& arg) {
   decode(matrix->value()->Get(I)->value()->Get(j), arg);
 }
 
 template <int I, class T, class... Args>
 inline void
-decodeOne(fbs::Matrix* matrix, size_t j, T& arg, Args&... args) {
+decodeOne(const fbs::Matrix* matrix, size_t j, T& arg, Args&... args) {
   decodeOne<I>(matrix, j, arg);
   decodeOne<I+1>(matrix, j, args...);
 }
 
 template <class... Args>
 inline void
-decodeOne(fbs::Matrix* matrix, size_t j, Args&... args) {
+decodeOne(const fbs::Matrix* matrix, size_t j, Args&... args) {
   decodeOne<0>(matrix, j, args...);
 }
 

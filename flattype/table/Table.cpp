@@ -23,13 +23,14 @@ namespace ftt {
 
 std::string Table::toDebugString() const {
   std::string out;
-  if (get()) {
-    acc::toAppend("bid:", getBID(),
-                  ", name:", getName(),
-                  ", fields:", acc::join(',', getFields()),
-                  &out);
-    acc::toAppend(Matrix(getMatrix()).toDebugString(), &out);
+  if (!get()) {
+    return "Table::<NULL>";
   }
+  acc::toAppend("Table::", getName(),
+                ", bid:", getBID(),
+                ", fields:", acc::join(',', getFields()),
+                ", matrix:", Matrix(getMatrix()).toDebugString(),
+                &out);
   return out;
 }
 

@@ -15,8 +15,8 @@
  */
 
 #include <gtest/gtest.h>
+#include "flattype/Compare.h"
 #include "flattype/Copy.h"
-#include "flattype/Equal.h"
 #include "flattype/Serialize.h"
 
 using namespace ftt;

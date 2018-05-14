@@ -17,7 +17,7 @@
 #pragma once
 
 #include "flattype/idl/matrix_generated.h"
-#include "flattype/Equal.h"
+#include "flattype/Compare.h"
 
 namespace ftt {
 
@@ -26,33 +26,20 @@ bool equal(fbs::Any type, const void* lhs, const void* rhs);
 // Tuple
 bool operator==(const fbs::Tuple& lhs, const fbs::Tuple& rhs);
 
-inline bool operator!=(const fbs::Tuple& lhs, const fbs::Tuple& rhs) {
-  return !(lhs == rhs);
-}
-
 // Item
 inline bool operator==(const fbs::Item& lhs, const fbs::Item& rhs) {
   return lhs.value_type() == rhs.value_type() &&
     equal(lhs.value_type(), lhs.value(), rhs.value());
-}
-inline bool operator!=(const fbs::Item& lhs, const fbs::Item& rhs) {
-  return !(lhs == rhs);
 }
 
 // Record
 inline bool operator==(const fbs::Record& lhs, const fbs::Record& rhs) {
   return *lhs.value() == *rhs.value();
 }
-inline bool operator!=(const fbs::Record& lhs, const fbs::Record& rhs) {
-  return !(lhs == rhs);
-}
 
 // Matrix
 inline bool operator==(const fbs::Matrix& lhs, const fbs::Matrix& rhs) {
   return *lhs.value() == *rhs.value();
-}
-inline bool operator!=(const fbs::Matrix& lhs, const fbs::Matrix& rhs) {
-  return !(lhs == rhs);
 }
 
 } // namespace ftt

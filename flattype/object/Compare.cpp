@@ -15,17 +15,16 @@
  */
 
 #include "accelerator/Exception.h"
-#include "flattype/object/Equal.h"
+#include "flattype/object/Compare.h"
 
 namespace ftt {
-namespace json {
 
 bool equal(fbs::Json type, const void* lhs, const void* rhs) {
   switch (type) {
 #define FTT_JSON_EQUAL_CASE(ft) \
     case fbs::Json_##ft: \
-      if (*reinterpret_cast<const fbs::ft*>(lhs) != \
-          *reinterpret_cast<const fbs::ft*>(rhs)) \
+      if (!(*reinterpret_cast<const fbs::ft*>(lhs) == \
+            *reinterpret_cast<const fbs::ft*>(rhs))) \
         return false; \
       break;
 
@@ -66,5 +65,4 @@ bool operator==(const fbs::Array& lhs, const fbs::Array& rhs) {
   return true;
 }
 
-} // namespace json
 } // namespace ftt

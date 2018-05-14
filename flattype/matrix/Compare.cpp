@@ -15,7 +15,7 @@
  */
 
 #include "accelerator/Exception.h"
-#include "flattype/matrix/Equal.h"
+#include "flattype/matrix/Compare.h"
 
 namespace ftt {
 
@@ -23,8 +23,8 @@ bool equal(fbs::Any type, const void* lhs, const void* rhs) {
   switch (type) {
 #define FTT_ANY_EQUAL_CASE(ft) \
     case fbs::Any_##ft: \
-      if (*reinterpret_cast<const fbs::ft*>(lhs) != \
-          *reinterpret_cast<const fbs::ft*>(rhs)) \
+      if (!(*reinterpret_cast<const fbs::ft*>(lhs) == \
+            *reinterpret_cast<const fbs::ft*>(rhs))) \
         return false; \
       break;
 

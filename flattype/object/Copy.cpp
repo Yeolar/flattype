@@ -19,7 +19,6 @@
 #include "flattype/object/Copy.h"
 
 namespace ftt {
-namespace json {
 
 ::flatbuffers::Offset<void>
 copy(::flatbuffers::FlatBufferBuilder& fbb, fbs::Json type, const void* obj) {
@@ -44,5 +43,4 @@ copy(::flatbuffers::FlatBufferBuilder& fbb, fbs::Json type, const void* obj) {
   return ::flatbuffers::Offset<void>();
 }
 
-} // namespace json
 } // namespace ftt

@@ -19,7 +19,6 @@
 #include "flattype/idl/object_generated.h"
 
 namespace ftt {
-namespace json {
 
 ::flatbuffers::Offset<void>
 copy(::flatbuffers::FlatBufferBuilder& fbb, fbs::Json type, const void* obj);
@@ -57,5 +56,4 @@ copy(::flatbuffers::FlatBufferBuilder& fbb, const fbs::Object& obj) {
   return fbs::CreateObjectDirect(fbb, &values);
 }
 
-} // namespace json
 } // namespace ftt

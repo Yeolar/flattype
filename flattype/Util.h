@@ -18,9 +18,64 @@
 
 #include <cstdlib>
 
-#include "flatbuffers/flatbuffers.h"
+#include "accelerator/Range.h"
+#include "flattype/idl/base_generated.h"
+#include "flattype/Type.h"
 
 namespace ftt {
+
+/*
+template <class T>
+const T* asType(const void* ptr) {
+  return static_cast<const T*>(ptr);
+}
+*/
+
+// get value
+
+template <class T>
+inline typename std::enable_if<
+  std::is_arithmetic<T>::value, T>::type
+getValue(const void* ptr) {
+  return reinterpret_cast<const typename AnyType<T>::type*>(ptr)->value();
+}
+
+template <class T>
+inline typename std::enable_if<
+  std::is_same<T, acc::StringPiece>::value, acc::StringPiece>::type
+getValue(const void* ptr) {
+  auto s = reinterpret_cast<const typename AnyType<T>::type*>(ptr)->value();
+  return acc::StringPiece(s->data(), s->size());
+}
+
+// get value pointer
+
+template <class T>
+inline const T* getValuePtr(const void* ptr) {
+  return reinterpret_cast<const T*>(
+      reinterpret_cast<const ::flatbuffers::Table*>(ptr)
+      ->GetAddressOf(AnyType<T>::type::VT_VALUE));
+}
+
+// mutate value
+
+template <class T>
+inline typename std::enable_if<
+  std::is_arithmetic<T>::value && !std::is_same<T, bool>::value, bool>::type
+mutateValue(void* ptr, T value) {
+  return reinterpret_cast<::flatbuffers::Table*>(ptr)
+      ->SetField(AnyType<T>::type::VT_VALUE, value, T());
+}
+
+template <class T>
+inline typename std::enable_if<
+  std::is_same<T, bool>::value, bool>::type
+mutateValue(void* ptr, bool value) {
+  return reinterpret_cast<::flatbuffers::Table*>(ptr)
+      ->SetField(AnyType<T>::type::VT_VALUE, uint8_t(value), uint8_t());
+}
+
+//////////////////////////////////////////////////////////////////////
 
 namespace detail {
 
@@ -42,7 +97,7 @@ inline Iter lookupByKey(const ::flatbuffers::Vector<T>* vector, const K& key) {
                          vector->size(),
                          ::flatbuffers::IndirectHelper<T>::element_stride,
                          detail::keyCompare<T, K>);
-  return p ? Iter(reinterpret_cast<const uint8_t*>(p)) : vector->end();
+  return p ? Iter(reinterpret_cast<const uint8_t*>(p), 0) : vector->end();
 }
 
 } // namespace detail
@@ -50,15 +105,15 @@ inline Iter lookupByKey(const ::flatbuffers::Vector<T>* vector, const K& key) {
 template <class T, class K>
 inline typename ::flatbuffers::Vector<T>::iterator
 find(const ::flatbuffers::Vector<T>* vector, const K& key) {
-  return detail::lookupByKey<T, K, ::flatbuffers::Vector<T>::iterator>(
-      vector, key);
+  return detail::lookupByKey<T, K,
+         typename ::flatbuffers::Vector<T>::iterator>(vector, key);
 }
 
 template <class T, class K>
 inline typename ::flatbuffers::Vector<T>::const_iterator
 findConst(const ::flatbuffers::Vector<T>* vector, const K& key) {
-  return detail::lookupByKey<T, K, ::flatbuffers::Vector<T>::const_iterator>(
-      vector, key);
+  return detail::lookupByKey<T, K,
+         typename ::flatbuffers::Vector<T>::const_iterator>(vector, key);
 }
 
 //////////////////////////////////////////////////////////////////////

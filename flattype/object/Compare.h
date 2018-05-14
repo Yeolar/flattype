@@ -17,14 +17,11 @@
 #pragma once
 
 #include "flattype/idl/object_generated.h"
-#include "flattype/Equal.h"
+#include "flattype/Compare.h"
 
 namespace ftt {
-namespace json {
 
 bool equal(fbs::Json type, const void* lhs, const void* rhs);
-
-using ftt::operator==;
 
 // Pair
 inline bool operator==(const fbs::Pair& lhs, const fbs::Pair& rhs) {
@@ -32,24 +29,17 @@ inline bool operator==(const fbs::Pair& lhs, const fbs::Pair& rhs) {
     lhs.value_type() == rhs.value_type() &&
     equal(lhs.value_type(), lhs.value(), rhs.value());
 }
-inline bool operator!=(const fbs::Pair& lhs, const fbs::Pair& rhs) {
-  return !(lhs == rhs);
-}
 
 // Array
 bool operator==(const fbs::Array& lhs, const fbs::Array& rhs);
-
-inline bool operator!=(const fbs::Array& lhs, const fbs::Array& rhs) {
-  return !(lhs == rhs);
-}
 
 // Object
 inline bool operator==(const fbs::Object& lhs, const fbs::Object& rhs) {
   return *lhs.value() == *rhs.value();
 }
-inline bool operator!=(const fbs::Object& lhs, const fbs::Object& rhs) {
-  return !(lhs == rhs);
-}
 
-} // namespace json
+// ignore
+inline bool operator<(const fbs::Array&, const fbs::Array&) { return false; }
+inline bool operator<(const fbs::Object&, const fbs::Object&) { return false; }
+
 } // namespace ftt

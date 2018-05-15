@@ -95,11 +95,19 @@ add_subdirectory(flattype/table)
 
 add_library(flattype_static STATIC
     $<TARGET_OBJECTS:flattype_base>
+    $<TARGET_OBJECTS:flattype_matrix>
+    $<TARGET_OBJECTS:flattype_message>
+    $<TARGET_OBJECTS:flattype_object>
+    $<TARGET_OBJECTS:flattype_table>
 )
 set_target_properties(flattype_static PROPERTIES OUTPUT_NAME flattype)
 
 add_library(flattype_shared SHARED
     $<TARGET_OBJECTS:flattype_base>
+    $<TARGET_OBJECTS:flattype_matrix>
+    $<TARGET_OBJECTS:flattype_message>
+    $<TARGET_OBJECTS:flattype_object>
+    $<TARGET_OBJECTS:flattype_table>
 )
 set_target_properties(flattype_shared PROPERTIES OUTPUT_NAME flattype)
 
@@ -123,6 +131,7 @@ if(GTEST_FOUND)
     enable_testing()
     add_subdirectory(flattype/test)
     add_subdirectory(flattype/matrix/test)
+    add_subdirectory(flattype/object/test)
 endif()
 
 # Pack

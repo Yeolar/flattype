@@ -20,12 +20,18 @@
 #include "flattype/idl/object_generated.h"
 #include "flattype/Builder.h"
 #include "flattype/object/dynamic.h"
+#include "flattype/object/Type.h"
 
 namespace ftt {
 
 class DynamicBuilder : public Builder {
  public:
-  DynamicBuilder() : Builder() {}
+  DynamicBuilder()
+    : Builder() {}
+  DynamicBuilder(const acc::dynamic& d)
+    : Builder(), dynamic_(d) {}
+  DynamicBuilder(acc::dynamic&& d)
+    : Builder(), dynamic_(std::move(d)) {}
 
   explicit DynamicBuilder(FBB* fbb, bool owns = false)
     : Builder(fbb, owns) {}
@@ -45,7 +51,7 @@ class DynamicBuilder : public Builder {
 
   ftt::dynamic toDynamic() {
     finish();
-    return ftt::dynamic((dynamic::Type) dynamic_.type(), detachedData());
+    return ftt::dynamic(toJsonType(dynamic_.type()), detachedData());
   }
 
  private:

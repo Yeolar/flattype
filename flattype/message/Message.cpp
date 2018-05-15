@@ -16,6 +16,7 @@
 
 #include "accelerator/Conv.h"
 #include "flattype/message/Message.h"
+#include "flattype/object/dynamic.h"
 #include "flattype/table/Table.h"
 
 namespace ftt {
@@ -25,12 +26,16 @@ std::string Message::toDebugString() const {
   if (!get()) {
     return "Message::<NULL>";
   }
+
+  std::stringstream ss;
+  ss << dynamic(fbs::Json_Object, getJData());
+
   acc::toAppend("Message::",
                 ", code:", getCode(),
                 ", message:", getMessage(),
+                ", jdata:", ss.str(),
                 ", xdata:", Table(getXData()).toDebugString(),
                 &out);
-  //if (getJData()) acc::toAppend(", jdata:", *getJData(), &out);
   return out;
 }
 

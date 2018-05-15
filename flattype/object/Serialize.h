@@ -16,9 +16,20 @@
 
 #pragma once
 
+#include "accelerator/json.h"
 #include "flattype/object/Encoding.h"
 
 namespace ftt {
+
+struct dynamic;
+
+std::string serialize(dynamic const&, acc::json::serialization_opts const&);
+
+std::string toJson(dynamic const&);
+std::string toPrettyJson(dynamic const&);
+std::string toPseudoJson(dynamic const&);
+
+//////////////////////////////////////////////////////////////////////
 
 template <class... Args>
 ::flatbuffers::DetachedBuffer serializeJson(const Args&... args) {

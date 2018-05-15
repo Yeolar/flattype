@@ -34,7 +34,10 @@ inline bool operator==(
     const ::flatbuffers::Vector<flatbuffers::Offset<FT>>& lhs,
     const ::flatbuffers::Vector<flatbuffers::Offset<FT>>& rhs) {
   return lhs.size() == rhs.size() &&
-    std::equal(lhs.begin(), lhs.end(), rhs.begin());
+    std::equal(
+        lhs.begin(), lhs.end(),
+        rhs.begin(),
+        [](const FT* a, const FT* b) { return *a == *b; });
 }
 
 template <class FT>
@@ -43,7 +46,8 @@ inline bool operator<(
     const ::flatbuffers::Vector<flatbuffers::Offset<FT>>& rhs) {
   return std::lexicographical_compare(
       lhs.begin(), lhs.end(),
-      rhs.begin(), rhs.end());
+      rhs.begin(), rhs.end(),
+      [](const FT* a, const FT* b) { return *a < *b; });
 }
 
 //////////////////////////////////////////////////////////////////////

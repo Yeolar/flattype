@@ -27,7 +27,7 @@ namespace ftt {
 
 #define FTT_DYNAMIC_DEF_TYPEINFO(T) \
   constexpr const char* dynamic::TypeInfo<T>::name; \
-  constexpr dynamic::Type dynamic::TypeInfo<T>::type; \
+  constexpr fbs::Json dynamic::TypeInfo<T>::type; \
   //
 
 FTT_DYNAMIC_DEF_TYPEINFO(std::nullptr_t)
@@ -40,24 +40,25 @@ FTT_DYNAMIC_DEF_TYPEINFO(dynamic::Object)
 
 #undef FTT_DYNAMIC_DEF_TYPEINFO
 
-dynamic::dynamic(Type type, const void* data)
+dynamic::dynamic(fbs::Json type, const void* data)
   : type_(type),
     ptr_(data) {}
 
-dynamic::dynamic(Type type, const uint8_t* data)
+dynamic::dynamic(fbs::Json type, const uint8_t* data)
   : type_(type),
     ptr_(data ? ::flatbuffers::GetRoot<fbs::Object>(data) : nullptr) {}
 
-dynamic::dynamic(Type type, ::flatbuffers::DetachedBuffer&& data)
+dynamic::dynamic(fbs::Json type, ::flatbuffers::DetachedBuffer&& data)
   : type_(type),
-    ptr_(data.data() ? ::flatbuffers::GetRoot<fbs::Object>(data.data()) : nullptr),
+    ptr_(data.data() ? ::flatbuffers::GetRoot<fbs::Object>(data.data())
+                     : nullptr),
     data_(std::move(data)) {}
 
 const char* dynamic::typeName() const {
   return typeName(type_);
 }
 
-TypeError::TypeError(const std::string& expected, dynamic::Type actual)
+TypeError::TypeError(const std::string& expected, fbs::Json actual)
   : std::runtime_error(acc::to<std::string>("TypeError: expected dynamic "
       "type `", expected, '\'', ", but had type `",
       dynamic::typeName(actual), '\''))
@@ -65,38 +66,38 @@ TypeError::TypeError(const std::string& expected, dynamic::Type actual)
 
 // This is a higher-order preprocessor macro to aid going from runtime
 // types to the compile time type system.
-#define FTT_DYNAMIC_APPLY(type, apply) \
-  do {                                 \
-    switch ((type)) {                  \
-      case NULLT:                      \
-        apply(std::nullptr_t);         \
-        break;                         \
-      case ARRAY:                      \
-        apply(Array);                  \
-        break;                         \
-      case BOOL:                       \
-        apply(bool);                   \
-        break;                         \
-      case DOUBLE:                     \
-        apply(double);                 \
-        break;                         \
-      case INT64:                      \
-        apply(int64_t);                \
-        break;                         \
-      case OBJECT:                     \
-        apply(Object);                 \
-        break;                         \
-      case STRING:                     \
-        apply(acc::StringPiece);       \
-        break;                         \
-      default:                         \
-        ACCCHECK(0);                   \
-    }                                  \
+#define FTT_DYNAMIC_APPLY(type, apply)      \
+  do {                                      \
+    switch ((type)) {                       \
+      case fbs::Json_Null:                  \
+        apply(std::nullptr_t);              \
+        break;                              \
+      case fbs::Json_Array:                 \
+        apply(Array);                       \
+        break;                              \
+      case fbs::Json_Bool:                  \
+        apply(bool);                        \
+        break;                              \
+      case fbs::Json_Double:                \
+        apply(double);                      \
+        break;                              \
+      case fbs::Json_Int64:                 \
+        apply(int64_t);                     \
+        break;                              \
+      case fbs::Json_Object:                \
+        apply(Object);                      \
+        break;                              \
+      case fbs::Json_String:                \
+        apply(acc::StringPiece);            \
+        break;                              \
+      default:                              \
+        ACC_CHECK_THROW(0, acc::Exception); \
+    }                                       \
   } while (0)
 
 bool dynamic::operator<(dynamic const& o) const {
-  if (UNLIKELY(type_ == OBJECT || o.type_ == OBJECT ||
-               type_ == ARRAY || o.type_ == ARRAY)) {
+  if (UNLIKELY(type_ == fbs::Json_Object || o.type_ == fbs::Json_Object ||
+               type_ == fbs::Json_Array || o.type_ == fbs::Json_Array)) {
     throw TypeError("object", type_);
   }
   if (type_ != o.type_) {
@@ -136,7 +137,7 @@ dynamic dynamic::at(size_t idx) const {
     if (idx >= parray->value()->size()) {
       std::__throw_out_of_range("out of range in dynamic array");
     }
-    return dynamic((Type) parray->value_type()->GetEnum<fbs::Json>(idx),
+    return dynamic(parray->value_type()->GetEnum<fbs::Json>(idx),
                    parray->value()->Get(idx));
   } else {
     throw TypeError("array", type());
@@ -150,7 +151,7 @@ dynamic dynamic::at(acc::StringPiece idx) const {
       throw std::out_of_range(acc::to<std::string>(
           "couldn't find key ", idx, " in dynamic object"));
     }
-    return dynamic((Type) o->value_type(), o->value());
+    return dynamic(o->value_type(), o->value());
   } else {
     throw TypeError("object", type());
   }
@@ -171,27 +172,26 @@ std::size_t dynamic::size() const {
 
 std::size_t dynamic::hash() const {
   switch (type()) {
-  case OBJECT:
-  case ARRAY:
-  case NULLT:
+  case fbs::Json_Object:
+  case fbs::Json_Array:
+  case fbs::Json_Null:
     throw TypeError("not null/object/array", type());
-  case INT64:
+  case fbs::Json_Int64:
     return std::hash<int64_t>()(getInt());
-  case DOUBLE:
+  case fbs::Json_Double:
     return std::hash<double>()(getDouble());
-  case BOOL:
+  case fbs::Json_Bool:
     return std::hash<bool>()(getBool());
-  case STRING: {
-    // keep it compatible with ACCString
+  case fbs::Json_String: {
     const auto& str = getString();
     return ::acc::hash::fnv32_buf(str.data(), str.size());
   }
   default:
-    ACCCHECK(0);
+    ACC_CHECK_THROW(0, acc::Exception);
   }
 }
 
-char const* dynamic::typeName(Type t) {
+char const* dynamic::typeName(fbs::Json t) {
 #define FTT_X(T) return TypeInfo<T>::name
   FTT_DYNAMIC_APPLY(t, FTT_X);
 #undef FTT_X

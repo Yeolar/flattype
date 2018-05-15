@@ -40,15 +40,7 @@ struct TypeError;
 //////////////////////////////////////////////////////////////////////
 
 struct dynamic : private boost::operators<dynamic> {
-  enum Type {
-    NULLT  = fbs::Json_Null,
-    ARRAY  = fbs::Json_Array,
-    BOOL   = fbs::Json_Bool,
-    DOUBLE = fbs::Json_Double,
-    INT64  = fbs::Json_Int64,
-    OBJECT = fbs::Json_Object,
-    STRING = fbs::Json_String,
-  };
+
   template<class T, class Enable = void> struct NumericTypeHelper;
 
   /*
@@ -71,9 +63,9 @@ struct dynamic : private boost::operators<dynamic> {
   struct const_item_iterator;
 
  public:
-  dynamic(Type type, const void* data);
-  dynamic(Type type, const uint8_t* data);
-  dynamic(Type type, ::flatbuffers::DetachedBuffer&& data);
+  dynamic(fbs::Json type, const void* data);
+  dynamic(fbs::Json type, const uint8_t* data);
+  dynamic(fbs::Json type, ::flatbuffers::DetachedBuffer&& data);
   ~dynamic() noexcept {}
 
   dynamic(dynamic const&) = delete;
@@ -151,7 +143,7 @@ struct dynamic : private boost::operators<dynamic> {
   /*
    * Returns the type of this dynamic.
    */
-  Type type() const;
+  fbs::Json type() const;
 
   /*
    * Returns the type of this dynamic as a printable string.
@@ -210,8 +202,8 @@ struct dynamic : private boost::operators<dynamic> {
    * You can iterate over the values of the array.  Calling these on
    * non-arrays will throw a TypeError.
    */
-  const_iterator begin()  const;
-  const_iterator end()    const;
+  const_iterator begin() const;
+  const_iterator end() const;
 
  private:
   /*
@@ -293,13 +285,12 @@ struct dynamic : private boost::operators<dynamic> {
 
   template<class T> T asImpl() const;
 
-  static char const* typeName(Type);
+  static char const* typeName(fbs::Json);
 
   void print(std::ostream&) const;
-  void print_as_pseudo_json(std::ostream&) const; // see json.cpp
 
  private:
-  Type type_;
+  fbs::Json type_;
   const void* ptr_;
   ::flatbuffers::DetachedBuffer data_;
 };

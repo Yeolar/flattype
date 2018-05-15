@@ -20,8 +20,9 @@
 #include <boost/iterator/iterator_facade.hpp>
 
 #include "accelerator/Conv.h"
-#include "accelerator/Logging.h"
+#include "accelerator/Exception.h"
 #include "accelerator/Macro.h"
+#include "flattype/object/Serialize.h"
 
 //////////////////////////////////////////////////////////////////////
 
@@ -41,7 +42,7 @@ struct hash< ::ftt::dynamic> {
 namespace ftt {
 
 struct TypeError : std::runtime_error {
-  explicit TypeError(const std::string& expected, dynamic::Type actual);
+  explicit TypeError(const std::string& expected, fbs::Json actual);
   ~TypeError() {}
 };
 
@@ -132,16 +133,16 @@ inline dynamic::IterableProxy<dynamic::const_item_iterator> dynamic::items()
   return get<Object>().value();
 }
 
-inline bool dynamic::isString() const { return type_ == STRING; }
-inline bool dynamic::isObject() const { return type_ == OBJECT; }
-inline bool dynamic::isBool()   const { return type_ == BOOL; }
-inline bool dynamic::isArray()  const { return type_ == ARRAY; }
-inline bool dynamic::isDouble() const { return type_ == DOUBLE; }
-inline bool dynamic::isInt()    const { return type_ == INT64; }
-inline bool dynamic::isNull()   const { return type_ == NULLT; }
+inline bool dynamic::isString() const { return type_ == fbs::Json_String; }
+inline bool dynamic::isObject() const { return type_ == fbs::Json_Object; }
+inline bool dynamic::isBool()   const { return type_ == fbs::Json_Bool; }
+inline bool dynamic::isArray()  const { return type_ == fbs::Json_Array; }
+inline bool dynamic::isDouble() const { return type_ == fbs::Json_Double; }
+inline bool dynamic::isInt()    const { return type_ == fbs::Json_Int64; }
+inline bool dynamic::isNull()   const { return type_ == fbs::Json_Null; }
 inline bool dynamic::isNumber() const { return isInt() || isDouble(); }
 
-inline dynamic::Type dynamic::type() const {
+inline fbs::Json dynamic::type() const {
   return type_;
 }
 
@@ -255,27 +256,28 @@ inline dynamic::const_item_iterator dynamic::find(acc::StringPiece key) const {
 #define FTT_DYNAMIC_DEC_TYPEINFO(T, str, val) \
   template <> struct dynamic::TypeInfo<T> { \
     static constexpr const char* name = str; \
-    static constexpr dynamic::Type type = val; \
+    static constexpr fbs::Json type = val; \
   }; \
   //
 
-FTT_DYNAMIC_DEC_TYPEINFO(std::nullptr_t,      "null",    dynamic::NULLT)
-FTT_DYNAMIC_DEC_TYPEINFO(bool,                "boolean", dynamic::BOOL)
-FTT_DYNAMIC_DEC_TYPEINFO(acc::StringPiece,    "string",  dynamic::STRING)
-FTT_DYNAMIC_DEC_TYPEINFO(dynamic::Array,      "array",   dynamic::ARRAY)
-FTT_DYNAMIC_DEC_TYPEINFO(double,              "double",  dynamic::DOUBLE)
-FTT_DYNAMIC_DEC_TYPEINFO(int64_t,             "int64",   dynamic::INT64)
-FTT_DYNAMIC_DEC_TYPEINFO(dynamic::Object,     "object",  dynamic::OBJECT)
+FTT_DYNAMIC_DEC_TYPEINFO(std::nullptr_t,      "null",    fbs::Json_Null)
+FTT_DYNAMIC_DEC_TYPEINFO(bool,                "boolean", fbs::Json_Bool)
+FTT_DYNAMIC_DEC_TYPEINFO(acc::StringPiece,    "string",  fbs::Json_String)
+FTT_DYNAMIC_DEC_TYPEINFO(dynamic::Array,      "array",   fbs::Json_Array)
+FTT_DYNAMIC_DEC_TYPEINFO(double,              "double",  fbs::Json_Double)
+FTT_DYNAMIC_DEC_TYPEINFO(int64_t,             "int64",   fbs::Json_Int64)
+FTT_DYNAMIC_DEC_TYPEINFO(dynamic::Object,     "object",  fbs::Json_Object)
 
 #undef FTT_DYNAMIC_DEC_TYPEINFO
 
 template<class T>
 T dynamic::asImpl() const {
   switch (type()) {
-  case INT64:  return acc::to<T>(ftt::getValue<int64_t>(ptr_));
-  case DOUBLE: return acc::to<T>(ftt::getValue<double>(ptr_));
-  case BOOL:   return acc::to<T>(ftt::getValue<bool>(ptr_));
-  case STRING: return acc::to<T>(ftt::getValue<acc::StringPiece>(ptr_));
+  case fbs::Json_Int64:  return acc::to<T>(ftt::getValue<int64_t>(ptr_));
+  case fbs::Json_Double: return acc::to<T>(ftt::getValue<double>(ptr_));
+  case fbs::Json_Bool:   return acc::to<T>(ftt::getValue<bool>(ptr_));
+  case fbs::Json_String:
+    return acc::to<T>(ftt::getValue<acc::StringPiece>(ptr_));
   default:
     throw TypeError("int/double/bool/string", type());
   }
@@ -309,8 +311,8 @@ T& dynamic::getValue() {
     throw TypeError(TypeInfo<T>::name, type());
   }
   switch (type()) {
-  case INT64:
-  case DOUBLE:
+  case fbs::Json_Int64:
+  case fbs::Json_Double:
     return *const_cast<T*>(ftt::getValuePtr<T>(ptr_));
   default:
     throw TypeError("int/double", type());
@@ -323,10 +325,10 @@ T dynamic::getValue() const {
     throw TypeError(TypeInfo<T>::name, type());
   }
   switch (type()) {
-  case INT64:
-  case DOUBLE:
-  case BOOL:
-  case STRING:
+  case fbs::Json_Int64:
+  case fbs::Json_Double:
+  case fbs::Json_Bool:
+  case fbs::Json_String:
     return ftt::getValue<T>(ptr_);
   default:
     throw TypeError("int/double/bool/string", type());
@@ -337,29 +339,28 @@ T dynamic::getValue() const {
 
 inline void dynamic::print(std::ostream& out) const {
   switch (type_) {
-    case NULLT:
+    case fbs::Json_Null:
       out << "null";
       break;
-    case ARRAY:
-      this->print_as_pseudo_json(out);
-      break;
-    case BOOL:
+    case fbs::Json_Bool:
       out << getAddress<bool>()->value();
       break;
-    case DOUBLE:
+    case fbs::Json_Double:
       out << getAddress<double>()->value();
       break;
-    case INT64:
+    case fbs::Json_Int64:
       out << getAddress<int64_t>()->value();
       break;
-    case OBJECT:
-      this->print_as_pseudo_json(out);
-      break;
-    case STRING:
+    case fbs::Json_String:
       out << getAddress<acc::StringPiece>()->value()->data();
       break;
+    case fbs::Json_Array:
+    case fbs::Json_Object: {
+      out << toPseudoJson(*this);
+      break;
+    }
     default:
-      ACCCHECK(0);
+      ACC_CHECK_THROW(0, acc::Exception);
   }
 }
 

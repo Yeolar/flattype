@@ -24,13 +24,6 @@
 
 namespace ftt {
 
-/*
-template <class T>
-const T* asType(const void* ptr) {
-  return static_cast<const T*>(ptr);
-}
-*/
-
 // get value
 
 template <class T>

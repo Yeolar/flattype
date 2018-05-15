@@ -26,14 +26,10 @@ std::string Message::toDebugString() const {
   if (!get()) {
     return "Message::<NULL>";
   }
-
-  std::stringstream ss;
-  ss << dynamic(fbs::Json_Object, getJData());
-
   acc::toAppend("Message::",
                 ", code:", getCode(),
                 ", message:", getMessage(),
-                ", jdata:", ss.str(),
+                ", jdata:", toPseudoJson(dynamic(fbs::Json_Object, getJData())),
                 ", xdata:", Table(getXData()).toDebugString(),
                 &out);
   return out;

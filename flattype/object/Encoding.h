@@ -412,7 +412,7 @@ encodeJsonObject(::flatbuffers::FlatBufferBuilder& fbb, const acc::dynamic& d) {
 
     }
   }
-  return fbs::CreateObjectDirect(fbb, &values);
+  return fbs::CreateObject(fbb, fbb.CreateVectorOfSortedTables(&values));
 }
 
 } // namespace ftt

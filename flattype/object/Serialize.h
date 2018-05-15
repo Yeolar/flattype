@@ -19,7 +19,6 @@
 #include "flattype/object/Encoding.h"
 
 namespace ftt {
-namespace json {
 
 template <class... Args>
 ::flatbuffers::DetachedBuffer serializeJson(const Args&... args) {
@@ -47,5 +46,4 @@ void unserializeJson(const String& in, Args&... args) {
   vdecode(ptr, args...);
 }
 
-} // namespace json
 } // namespace ftt

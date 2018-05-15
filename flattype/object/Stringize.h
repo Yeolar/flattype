@@ -19,12 +19,10 @@
 #include "flattype/idl/object_generated.h"
 
 namespace ftt {
-namespace json {
 
 template <class Tgt>
 void toAppendJson(fbs::Json type, const void* ptr, Tgt* result);
 
-} // namespace json
 } // namespace ftt
 
 namespace acc {
@@ -40,7 +38,6 @@ template <class Tgt> void toAppend(const ftt::fbs::Object&, Tgt*);
 #include "flattype/Stringize.h"
 
 namespace ftt {
-namespace json {
 
 template <class Tgt>
 void toAppendJson(fbs::Json type, const void* ptr, Tgt* result) {
@@ -67,7 +64,6 @@ void toAppendJson(fbs::Json type, const void* ptr, Tgt* result) {
   }
 }
 
-} // namespace json
 } // namespace ftt
 
 namespace acc {
@@ -75,7 +71,7 @@ namespace acc {
 template <class Tgt>
 void toAppend(const ftt::fbs::Pair& value, Tgt* result) {
   toAppend("\"", value.name(), "\":", result);
-  ftt::json::toAppendJson(value.value_type(), value.value(), result);
+  ftt::toAppendJson(value.value_type(), value.value(), result);
 }
 
 template <class Tgt>
@@ -85,7 +81,7 @@ void toAppend(const ftt::fbs::Array& value, Tgt* result) {
     if (i > 0) {
       toAppend(',', result);
     }
-    ftt::json::toAppendJson(
+    ftt::toAppendJson(
         types->GetEnum<ftt::fbs::Json>(i), value.value()->Get(i), result);
   }
 }

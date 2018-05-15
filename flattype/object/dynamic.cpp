@@ -40,6 +40,19 @@ FTT_DYNAMIC_DEF_TYPEINFO(dynamic::Object)
 
 #undef FTT_DYNAMIC_DEF_TYPEINFO
 
+dynamic::dynamic(Type type, const void* data)
+  : type_(type),
+    ptr_(data) {}
+
+dynamic::dynamic(Type type, const uint8_t* data)
+  : type_(type),
+    ptr_(data ? ::flatbuffers::GetRoot<fbs::Object>(data) : nullptr) {}
+
+dynamic::dynamic(Type type, ::flatbuffers::DetachedBuffer&& data)
+  : type_(type),
+    ptr_(data.data() ? ::flatbuffers::GetRoot<fbs::Object>(data.data()) : nullptr),
+    data_(std::move(data)) {}
+
 const char* dynamic::typeName() const {
   return typeName(type_);
 }

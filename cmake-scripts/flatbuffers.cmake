@@ -7,6 +7,7 @@ set(flatbuffers_TAG 20a400e940634108bad812f571582eeffc728eac)
 set(flatbuffers_BUILD ${CMAKE_CURRENT_BINARY_DIR}/flatbuffers/)
 set(flatbuffers_INCLUDE_DIR ${CMAKE_CURRENT_BINARY_DIR}/flatbuffers/src/flatbuffers/include)
 set(flatbuffers_STATIC_LIBRARIES ${CMAKE_CURRENT_BINARY_DIR}/flatbuffers/src/flatbuffers/libflatbuffers.a)
+set(flatbuffers_COMPILER ${CMAKE_CURRENT_BINARY_DIR}/flatbuffers/src/flatbuffers/flatc)
 
 ExternalProject_Add(flatbuffers
     PREFIX flatbuffers

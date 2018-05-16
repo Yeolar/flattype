@@ -35,3 +35,5 @@
 
 /build/
 /flattype/flattype-config.h
+/flattype/idl/*_generated.h
+

@@ -8,8 +8,9 @@ namespace ftt.fbs;
 table Message {
     code: int;
     message: string;
-    jdata: Object;
-    xdata: Table;
+    jdata: Object;      // for json
+    vdata: Tuple;       // for parameters
+    xdata: Table;       // for table
 }
 
 root_type Message;

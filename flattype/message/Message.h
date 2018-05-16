@@ -41,6 +41,7 @@ class Message : public Wrapper<fbs::Message> {
   int getCode() const;
   std::string getMessage() const;
   const fbs::Object* getJData() const;
+  const fbs::Tuple* getVData() const;
   const fbs::Table* getXData() const;
 };
 

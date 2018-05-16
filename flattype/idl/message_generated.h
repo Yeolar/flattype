@@ -21,7 +21,8 @@ struct Message FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
     VT_CODE = 4,
     VT_MESSAGE = 6,
     VT_JDATA = 8,
-    VT_XDATA = 10
+    VT_VDATA = 10,
+    VT_XDATA = 12
   };
   int32_t code() const {
     return GetField<int32_t>(VT_CODE, 0);
@@ -31,6 +32,9 @@ struct Message FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   }
   const ftt::fbs::Object *jdata() const {
     return GetPointer<const ftt::fbs::Object *>(VT_JDATA);
+  }
+  const ftt::fbs::Tuple *vdata() const {
+    return GetPointer<const ftt::fbs::Tuple *>(VT_VDATA);
   }
   const ftt::fbs::Table *xdata() const {
     return GetPointer<const ftt::fbs::Table *>(VT_XDATA);
@@ -42,6 +46,8 @@ struct Message FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
            verifier.Verify(message()) &&
            VerifyOffset(verifier, VT_JDATA) &&
            verifier.VerifyTable(jdata()) &&
+           VerifyOffset(verifier, VT_VDATA) &&
+           verifier.VerifyTable(vdata()) &&
            VerifyOffset(verifier, VT_XDATA) &&
            verifier.VerifyTable(xdata()) &&
            verifier.EndTable();
@@ -60,6 +66,9 @@ struct MessageBuilder {
   void add_jdata(flatbuffers::Offset<ftt::fbs::Object> jdata) {
     fbb_.AddOffset(Message::VT_JDATA, jdata);
   }
+  void add_vdata(flatbuffers::Offset<ftt::fbs::Tuple> vdata) {
+    fbb_.AddOffset(Message::VT_VDATA, vdata);
+  }
   void add_xdata(flatbuffers::Offset<ftt::fbs::Table> xdata) {
     fbb_.AddOffset(Message::VT_XDATA, xdata);
   }
@@ -69,7 +78,7 @@ struct MessageBuilder {
   }
   MessageBuilder &operator=(const MessageBuilder &);
   flatbuffers::Offset<Message> Finish() {
-    const auto end = fbb_.EndTable(start_, 4);
+    const auto end = fbb_.EndTable(start_, 5);
     auto o = flatbuffers::Offset<Message>(end);
     return o;
   }
@@ -80,9 +89,11 @@ inline flatbuffers::Offset<Message> CreateMessage(
     int32_t code = 0,
     flatbuffers::Offset<flatbuffers::String> message = 0,
     flatbuffers::Offset<ftt::fbs::Object> jdata = 0,
+    flatbuffers::Offset<ftt::fbs::Tuple> vdata = 0,
     flatbuffers::Offset<ftt::fbs::Table> xdata = 0) {
   MessageBuilder builder_(_fbb);
   builder_.add_xdata(xdata);
+  builder_.add_vdata(vdata);
   builder_.add_jdata(jdata);
   builder_.add_message(message);
   builder_.add_code(code);
@@ -94,12 +105,14 @@ inline flatbuffers::Offset<Message> CreateMessageDirect(
     int32_t code = 0,
     const char *message = nullptr,
     flatbuffers::Offset<ftt::fbs::Object> jdata = 0,
+    flatbuffers::Offset<ftt::fbs::Tuple> vdata = 0,
     flatbuffers::Offset<ftt::fbs::Table> xdata = 0) {
   return ftt::fbs::CreateMessage(
       _fbb,
       code,
       message ? _fbb.CreateString(message) : 0,
       jdata,
+      vdata,
       xdata);
 }
 

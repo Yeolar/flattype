@@ -42,6 +42,7 @@ class MessageBuilder : public Builder {
   void setMessage(const std::string& msg);
 
   void buildJData(FBBFunc<fbs::Object>&& builder);
+  void buildVData(FBBFunc<fbs::Tuple>&& builder);
   void buildXData(FBBFunc<fbs::Table>&& builder);
 
   void finish() override;
@@ -52,6 +53,7 @@ class MessageBuilder : public Builder {
   int code_{0};
   std::string message_;
   ::flatbuffers::Offset<fbs::Object> jdata_;
+  ::flatbuffers::Offset<fbs::Tuple> vdata_;
   ::flatbuffers::Offset<fbs::Table> xdata_;
 };
 

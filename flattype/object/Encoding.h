@@ -246,40 +246,40 @@ namespace detail {
 
 template <class T>
 inline void
-vencodeImpl(::flatbuffers::FlatBufferBuilder& fbb,
-            std::vector<uint8_t>& types,
-            std::vector<flatbuffers::Offset<void>>& values,
-            const T& arg) {
+vencodeJsonImpl(::flatbuffers::FlatBufferBuilder& fbb,
+                std::vector<uint8_t>& types,
+                std::vector<flatbuffers::Offset<void>>& values,
+                const T& arg) {
   types.push_back(getJsonType<T>());
   values.push_back(encodeJson(fbb, arg).Union());
 }
 
 template <class T, class... Args>
 inline void
-vencodeImpl(::flatbuffers::FlatBufferBuilder& fbb,
-            std::vector<uint8_t>& types,
-            std::vector<flatbuffers::Offset<void>>& values,
-            const T& arg, const Args&... args) {
-  vencodeImpl(fbb, types, values, arg);
-  vencodeImpl(fbb, types, values, args...);
+vencodeJsonImpl(::flatbuffers::FlatBufferBuilder& fbb,
+                std::vector<uint8_t>& types,
+                std::vector<flatbuffers::Offset<void>>& values,
+                const T& arg, const Args&... args) {
+  vencodeJsonImpl(fbb, types, values, arg);
+  vencodeJsonImpl(fbb, types, values, args...);
 }
 
 template <int I, class T>
 inline void
-vdecodeImpl(const ::flatbuffers::Vector<uint8_t>*,
-            const ::flatbuffers::Vector<flatbuffers::Offset<void>>* values,
-            T& arg) {
+vdecodeJsonImpl(const ::flatbuffers::Vector<uint8_t>*,
+                const ::flatbuffers::Vector<flatbuffers::Offset<void>>* values,
+                T& arg) {
   assert(getJsonType<T>() == types->GetEnum<Json>(i));
   decodeJson(values->Get(I), arg);
 }
 
 template <int I, class T, class... Args>
 inline void
-vdecodeImpl(const ::flatbuffers::Vector<uint8_t>* types,
-            const ::flatbuffers::Vector<flatbuffers::Offset<void>>* values,
-            T& arg, Args&... args) {
-  vdecodeImpl<I>(types, values, arg);
-  vdecodeImpl<I+1>(types, values, args...);
+vdecodeJsonImpl(const ::flatbuffers::Vector<uint8_t>* types,
+                const ::flatbuffers::Vector<flatbuffers::Offset<void>>* values,
+                T& arg, Args&... args) {
+  vdecodeJsonImpl<I>(types, values, arg);
+  vdecodeJsonImpl<I+1>(types, values, args...);
 }
 
 }  // namespace detail
@@ -290,7 +290,7 @@ inline ::flatbuffers::Offset<fbs::Array>
 vencode(::flatbuffers::FlatBufferBuilder& fbb, const Args&... args) {
   std::vector<uint8_t> types;
   std::vector<flatbuffers::Offset<void>> values;
-  detail::vencodeImpl(fbb, types, values, args...);
+  detail::vencodeJsonImpl(fbb, types, values, args...);
   return fbs::CreateArrayDirect(fbb, &types, &values);
 }
 
@@ -298,7 +298,7 @@ vencode(::flatbuffers::FlatBufferBuilder& fbb, const Args&... args) {
 template <class... Args>
 inline void
 vdecode(const fbs::Array* ptr, Args&... args) {
-  detail::vdecodeImpl<0>(ptr->value_type(), ptr->value(), args...);
+  detail::vdecodeJsonImpl<0>(ptr->value_type(), ptr->value(), args...);
 }
 
 // Pair decoding

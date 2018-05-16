@@ -38,6 +38,10 @@ void MessageBuilder::buildJData(FBBFunc<fbs::Object>&& builder) {
   jdata_ = builder(fbb_.get());
 }
 
+void MessageBuilder::buildVData(FBBFunc<fbs::Tuple>&& builder) {
+  vdata_ = builder(fbb_.get());
+}
+
 void MessageBuilder::buildXData(FBBFunc<fbs::Table>&& builder) {
   xdata_ = builder(fbb_.get());
 }
@@ -48,7 +52,7 @@ void MessageBuilder::finish() {
   }
   fbb_->Finish(
       fbs::CreateMessageDirect(
-          *fbb_, code_, message_.c_str(), jdata_, xdata_));
+          *fbb_, code_, message_.c_str(), jdata_, vdata_, xdata_));
   data_ = fbb_->Release();
   finished_ = true;
 }

@@ -162,10 +162,30 @@ vencodeImpl(::flatbuffers::FlatBufferBuilder& fbb,
 
 template <int I, class T>
 inline void
-vdecodeImpl(const ::flatbuffers::Vector<uint8_t>*,
+vdecodeImpl(::flatbuffers::FlatBufferBuilder& fbb,
+            const std::vector<uint8_t>& types,
+            const std::vector<flatbuffers::Offset<void>>& values,
+            T& arg) {
+  assert(getAnyType<T>() == static_cast<fbs::Any>(types[I]));
+  decode(::flatbuffers::GetTemporaryPointer(fbb, values[I]), arg);
+}
+
+template <int I, class T, class... Args>
+inline void
+vdecodeImpl(::flatbuffers::FlatBufferBuilder& fbb,
+            const std::vector<uint8_t>& types,
+            const std::vector<flatbuffers::Offset<void>>& values,
+            T& arg, Args&... args) {
+  vdecodeImpl<I>(fbb, types, values, arg);
+  vdecodeImpl<I+1>(fbb, types, values, args...);
+}
+
+template <int I, class T>
+inline void
+vdecodeImpl(const ::flatbuffers::Vector<uint8_t>* types,
             const ::flatbuffers::Vector<flatbuffers::Offset<void>>* values,
             T& arg) {
-  assert(getAnyType<T>() == types->GetEnum<Any>(i));
+  assert(getAnyType<T>() == types->GetEnum<Any>(I));
   decode(values->Get(I), arg);
 }
 

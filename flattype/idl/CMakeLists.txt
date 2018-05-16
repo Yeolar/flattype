@@ -6,11 +6,11 @@ foreach(fbs ${FLATTYPE_IDLS})
     execute_process(COMMAND
         ${flatbuffers_COMPILER}
             --cpp
-            --scoped-enums
+            #--scoped-enums
             --gen-mutable
             --gen-name-strings
             --gen-object-api
-            --cpp-str-type acc::fbstring
+            #--cpp-str-type acc::fbstring
             -o ${PROJECT_SOURCE_DIR}/flattype/idl/
             -I ${PROJECT_SOURCE_DIR}/flattype/idl/
             ${fbs})

@@ -17,8 +17,8 @@
 #pragma once
 
 #include "accelerator/dynamic.h"
-#include "flattype/idl/object_generated.h"
 #include "flattype/Builder.h"
+#include "flattype/CommonIDLs.h"
 #include "flattype/object/dynamic.h"
 #include "flattype/object/Type.h"
 

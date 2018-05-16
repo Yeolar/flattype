@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include "flattype/idl/matrix_generated.h"
+#include "flattype/CommonIDLs.h"
 #include "flattype/Util.h"
 #include "flattype/Wrapper.h"
 #include "flattype/matrix/Encoding.h"

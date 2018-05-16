@@ -16,24 +16,24 @@
 
 #pragma once
 
-#include "flattype/idl/table_generated.h"
 #include "flattype/Builder.h"
-#include "flattype/table/Table.h"
+#include "flattype/CommonIDLs.h"
+#include "flattype/bucket/Bucket.h"
 
 namespace ftt {
 
-class TableBuilder : public Builder {
+class BucketBuilder : public Builder {
  public:
-  TableBuilder() : Builder() {}
+  BucketBuilder() : Builder() {}
 
-  explicit TableBuilder(FBB* fbb, bool owns = false)
+  explicit BucketBuilder(FBB* fbb, bool owns = false)
     : Builder(fbb, owns) {}
 
-  TableBuilder(const TableBuilder&) = delete;
-  TableBuilder& operator=(const TableBuilder&) = delete;
+  BucketBuilder(const BucketBuilder&) = delete;
+  BucketBuilder& operator=(const BucketBuilder&) = delete;
 
-  TableBuilder(TableBuilder&&) = default;
-  TableBuilder& operator=(TableBuilder&&) = default;
+  BucketBuilder(BucketBuilder&&) = default;
+  BucketBuilder& operator=(BucketBuilder&&) = default;
 
   uint8_t getBID() const;
   void setBID(uint8_t bid);
@@ -48,10 +48,10 @@ class TableBuilder : public Builder {
 
   void finish() override;
 
-  Table toTable() { return toWrapper<Table>(); }
+  Bucket toBucket() { return toWrapper<Bucket>(); }
 
  private:
-  uint8_t bid_{Table::npos};
+  uint8_t bid_{Bucket::npos};
   std::string name_;
   std::vector<std::string> fields_;
   ::flatbuffers::Offset<fbs::Matrix> matrix_;

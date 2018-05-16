@@ -23,7 +23,7 @@
 #include "accelerator/dynamic.h"
 #include "accelerator/FBString.h"
 #include "accelerator/Range.h"
-#include "flattype/idl/object_generated.h"
+#include "flattype/CommonIDLs.h"
 #include "flattype/Type.h"
 
 namespace ftt {

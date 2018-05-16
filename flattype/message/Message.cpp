@@ -18,7 +18,7 @@
 #include "flattype/matrix/Tuple.h"
 #include "flattype/message/Message.h"
 #include "flattype/object/dynamic.h"
-#include "flattype/table/Table.h"
+#include "flattype/bucket/Bucket.h"
 
 namespace ftt {
 
@@ -30,9 +30,9 @@ std::string Message::toDebugString() const {
   acc::toAppend("Message::",
                 ", code:", getCode(),
                 ", message:", getMessage(),
+                ", bdata:", Bucket(getBData()).toDebugString(),
                 ", jdata:", toPseudoJson(dynamic(fbs::Json_Object, getJData())),
                 ", vdata:", Tuple(getVData()).toDebugString(),
-                ", xdata:", Table(getXData()).toDebugString(),
                 &out);
   return out;
 }
@@ -45,16 +45,16 @@ std::string Message::getMessage() const {
   return ptr_ ? ptr_->message()->str() : "";
 }
 
+const fbs::Bucket* Message::getBData() const {
+  return ptr_ ? ptr_->bdata() : nullptr;
+}
+
 const fbs::Object* Message::getJData() const {
   return ptr_ ? ptr_->jdata() : nullptr;
 }
 
 const fbs::Tuple* Message::getVData() const {
   return ptr_ ? ptr_->vdata() : nullptr;
-}
-
-const fbs::Table* Message::getXData() const {
-  return ptr_ ? ptr_->xdata() : nullptr;
 }
 
 } // namespace ftt

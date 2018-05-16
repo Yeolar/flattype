@@ -16,8 +16,8 @@
 
 #pragma once
 
-#include "flattype/idl/matrix_generated.h"
 #include "flattype/Builder.h"
+#include "flattype/CommonIDLs.h"
 #include "flattype/matrix/Copy.h"
 #include "flattype/matrix/Matrix.h"
 

@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include "flattype/idl/message_generated.h"
+#include "flattype/CommonIDLs.h"
 #include "flattype/Wrapper.h"
 
 namespace ftt {
@@ -40,9 +40,9 @@ class Message : public Wrapper<fbs::Message> {
 
   int getCode() const;
   std::string getMessage() const;
+  const fbs::Bucket* getBData() const;
   const fbs::Object* getJData() const;
   const fbs::Tuple* getVData() const;
-  const fbs::Table* getXData() const;
 };
 
 } // namespace ftt

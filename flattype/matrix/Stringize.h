@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include "flattype/idl/matrix_generated.h"
+#include "flattype/CommonIDLs.h"
 
 namespace ftt {
 

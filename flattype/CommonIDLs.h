@@ -16,12 +16,11 @@
 
 #pragma once
 
-#include "accelerator/dynamic.h"
-#include "flattype/CommonIDLs.h"
+#include "accelerator/FBString.h"
 
-namespace ftt {
-
-fbs::Json toJsonType(acc::dynamic::Type type);
-
-} // namespace ftt
+#include "flattype/idl/base_generated.h"
+#include "flattype/idl/matrix_generated.h"
+#include "flattype/idl/bucket_generated.h"
+#include "flattype/idl/object_generated.h"
+#include "flattype/idl/message_generated.h"
 

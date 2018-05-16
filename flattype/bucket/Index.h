@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include "flattype/idl/table_generated.h"
+#include "flattype/CommonIDLs.h"
 #include "flattype/Util.h"
 #include "flattype/Wrapper.h"
 

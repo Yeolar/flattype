@@ -19,7 +19,7 @@
 #include <cstdlib>
 
 #include "accelerator/Range.h"
-#include "flattype/idl/base_generated.h"
+#include "flattype/CommonIDLs.h"
 #include "flattype/Type.h"
 
 namespace ftt {

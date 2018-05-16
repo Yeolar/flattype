@@ -14,12 +14,12 @@ table Key64 { k: ulong (key); i: [ulong]; }
 table Index32 { name: string (key); keys: [Key32] (required); }
 table Index64 { name: string (key); keys: [Key64] (required); }
 
-table Table {
+table Bucket {
     bid: ubyte;
     name: string;
     matrix: Matrix;
     fields: [string];
 }
 
-root_type Table;
+root_type Bucket;
 

@@ -16,27 +16,27 @@
 
 #pragma once
 
-#include "flattype/idl/table_generated.h"
+#include "flattype/CommonIDLs.h"
 #include "flattype/Wrapper.h"
 
 namespace ftt {
 
-class Table : public Wrapper<fbs::Table> {
+class Bucket : public Wrapper<fbs::Bucket> {
  public:
   static constexpr uint8_t npos = std::numeric_limits<uint8_t>::max();
 
-  Table(const fbs::Table* table) : Wrapper(table) {}
+  Bucket(const fbs::Bucket* bucket) : Wrapper(bucket) {}
 
-  explicit Table(const uint8_t* data)
+  explicit Bucket(const uint8_t* data)
     : Wrapper(data) {}
-  explicit Table(::flatbuffers::DetachedBuffer&& data)
+  explicit Bucket(::flatbuffers::DetachedBuffer&& data)
     : Wrapper(std::move(data)) {}
 
-  Table(const Table&) = delete;
-  Table& operator=(const Table&) = delete;
+  Bucket(const Bucket&) = delete;
+  Bucket& operator=(const Bucket&) = delete;
 
-  Table(Table&&) = default;
-  Table& operator=(Table&&) = default;
+  Bucket(Bucket&&) = default;
+  Bucket& operator=(Bucket&&) = default;
 
   std::string toDebugString() const override;
 

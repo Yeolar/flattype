@@ -16,9 +16,9 @@
 
 #pragma once
 
-#include "flattype/idl/table_generated.h"
 #include "flattype/Builder.h"
-#include "flattype/table/Index.h"
+#include "flattype/CommonIDLs.h"
+#include "flattype/bucket/Index.h"
 
 namespace ftt {
 

@@ -26,9 +26,9 @@
 #include <vector>
 #include <boost/operators.hpp>
 
+#include "flattype/CommonIDLs.h"
 #include "flattype/Type.h"
 #include "flattype/Util.h"
-#include "flattype/idl/object_generated.h"
 
 namespace ftt {
 

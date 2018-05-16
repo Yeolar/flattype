@@ -15,7 +15,7 @@
  */
 
 #include "accelerator/Conv.h"
-#include "flattype/table/Index.h"
+#include "flattype/bucket/Index.h"
 
 namespace ftt {
 

@@ -14,49 +14,32 @@
  * limitations under the License.
  */
 
-#include "flattype/table/TableBuilder.h"
+#include "flattype/bucket/IndexBuilder.h"
 
 namespace ftt {
 
-uint8_t TableBuilder::getBID() const {
-  return bid_;
-}
-
-void TableBuilder::setBID(uint8_t bid) {
-  bid_ = bid;
-}
-
-std::string TableBuilder::getName() const {
-  return name_;
-}
-
-void TableBuilder::setName(const std::string& name) {
-  name_ = name;
-}
-
-const std::vector<std::string>& TableBuilder::getFields() const {
-  return fields_;
-}
-
-void TableBuilder::setFields(const std::vector<std::string>& fields) {
-  fields_ = fields;
-}
-
-void TableBuilder::buildMatrix(FBBFunc<fbs::Matrix>&& builder) {
-  matrix_ = builder(fbb_.get());
-}
-
-void TableBuilder::finish() {
+void Index32Builder::finish() {
   if (finished_) {
     return;
   }
   fbb_->Finish(
-      fbs::CreateTable(
+      fbs::CreateIndex32(
           *fbb_,
-          bid_,
           fbb_->CreateString(name_),
-          matrix_,
-          fbb_->CreateVectorOfStrings(fields_)));
+          fbb_->CreateVectorOfSortedTables(&keys_)));
+  data_ = fbb_->Release();
+  finished_ = true;
+}
+
+void Index64Builder::finish() {
+  if (finished_) {
+    return;
+  }
+  fbb_->Finish(
+      fbs::CreateIndex64(
+          *fbb_,
+          fbb_->CreateString(name_),
+          fbb_->CreateVectorOfSortedTables(&keys_)));
   data_ = fbb_->Release();
   finished_ = true;
 }

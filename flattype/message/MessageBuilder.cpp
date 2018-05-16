@@ -34,6 +34,10 @@ void MessageBuilder::setMessage(const std::string& msg) {
   message_ = msg;
 }
 
+void MessageBuilder::buildBData(FBBFunc<fbs::Bucket>&& builder) {
+  bdata_ = builder(fbb_.get());
+}
+
 void MessageBuilder::buildJData(FBBFunc<fbs::Object>&& builder) {
   jdata_ = builder(fbb_.get());
 }
@@ -42,17 +46,13 @@ void MessageBuilder::buildVData(FBBFunc<fbs::Tuple>&& builder) {
   vdata_ = builder(fbb_.get());
 }
 
-void MessageBuilder::buildXData(FBBFunc<fbs::Table>&& builder) {
-  xdata_ = builder(fbb_.get());
-}
-
 void MessageBuilder::finish() {
   if (finished_) {
     return;
   }
   fbb_->Finish(
       fbs::CreateMessageDirect(
-          *fbb_, code_, message_.c_str(), jdata_, vdata_, xdata_));
+          *fbb_, code_, message_.c_str(), bdata_, jdata_, vdata_));
   data_ = fbb_->Release();
   finished_ = true;
 }

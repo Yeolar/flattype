@@ -17,16 +17,16 @@
 #include "accelerator/Conv.h"
 #include "accelerator/String.h"
 #include "flattype/matrix/Matrix.h"
-#include "flattype/table/Table.h"
+#include "flattype/bucket/Bucket.h"
 
 namespace ftt {
 
-std::string Table::toDebugString() const {
+std::string Bucket::toDebugString() const {
   std::string out;
   if (!get()) {
-    return "Table::<NULL>";
+    return "Bucket::<NULL>";
   }
-  acc::toAppend("Table::", getName(),
+  acc::toAppend("Bucket::", getName(),
                 ", bid:", getBID(),
                 ", fields:", acc::join(',', getFields()),
                 ", matrix:", Matrix(getMatrix()).toDebugString(),
@@ -34,15 +34,15 @@ std::string Table::toDebugString() const {
   return out;
 }
 
-uint8_t Table::getBID() const {
+uint8_t Bucket::getBID() const {
   return ptr_ ? ptr_->bid() : npos;
 }
 
-std::string Table::getName() const {
+std::string Bucket::getName() const {
   return ptr_ ? ptr_->name()->str() : "";
 }
 
-std::vector<std::string> Table::getFields() const {
+std::vector<std::string> Bucket::getFields() const {
   std::vector<std::string> fields;
   if (ptr_ && ptr_->fields()) {
     for (auto i : *ptr_->fields()) {
@@ -52,7 +52,7 @@ std::vector<std::string> Table::getFields() const {
   return fields;
 }
 
-const fbs::Matrix* Table::getMatrix() const {
+const fbs::Matrix* Bucket::getMatrix() const {
   return ptr_ ? ptr_->matrix() : nullptr;
 }
 

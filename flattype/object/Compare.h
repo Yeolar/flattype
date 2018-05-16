@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include "flattype/idl/object_generated.h"
+#include "flattype/CommonIDLs.h"
 #include "flattype/Compare.h"
 
 namespace ftt {

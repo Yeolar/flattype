@@ -22,8 +22,7 @@
 
 #include "accelerator/Range.h"
 #include "accelerator/Traits.h"
-#include "flattype/idl/matrix_generated.h"
-#include "flattype/idl/object_generated.h"
+#include "flattype/CommonIDLs.h"
 
 namespace ftt {
 

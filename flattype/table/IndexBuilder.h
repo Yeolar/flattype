@@ -22,10 +22,10 @@
 
 namespace ftt {
 
-template <class FT, class KFT, class KType, class IType>
+template <class FT, class KFT, class KType>
 class IndexBuilderBase : public Builder {
  public:
-  typedef IndexBase<FT, KFT, KType, IType> Index;
+  typedef IndexBase<FT, KFT, KType> Index;
 
  public:
   IndexBuilderBase() : Builder() {}
@@ -59,53 +59,17 @@ class IndexBuilderBase : public Builder {
   std::vector<typename Index::offset> keys_;
 };
 
-class Index8Builder
-  : public IndexBuilderBase<fbs::Index8,fbs::Key8,uint8_t,uint8_t> {
- public:
-  Index8Builder()
-    : IndexBuilderBase<fbs::Index8,fbs::Key8,uint8_t,uint8_t>() {}
-  explicit Index8Builder(FBB* fbb, bool owns = false)
-    : IndexBuilderBase<fbs::Index8,fbs::Key8,uint8_t,uint8_t>(fbb, owns) {}
-
-  void addKeyIndex(uint8_t k, uint8_t i) {
-    IndexBuilderBase<fbs::Index8,fbs::Key8,uint8_t,uint8_t>::
-      addKeyIndex(fbs::CreateKey8(*fbb_, k, i));
-  }
-
-  void finish() override;
-
-  Index8 toIndex() { return toWrapper<Index8>(); }
-};
-
-class Index16Builder
-  : public IndexBuilderBase<fbs::Index16,fbs::Key16,uint16_t,uint16_t> {
- public:
-  Index16Builder()
-    : IndexBuilderBase<fbs::Index16,fbs::Key16,uint16_t,uint16_t>() {}
-  explicit Index16Builder(FBB* fbb, bool owns = false)
-    : IndexBuilderBase<fbs::Index16,fbs::Key16,uint16_t,uint16_t>(fbb, owns) {}
-
-  void addKeyIndex(uint16_t k, uint16_t i) {
-    IndexBuilderBase<fbs::Index16,fbs::Key16,uint16_t,uint16_t>::
-      addKeyIndex(fbs::CreateKey16(*fbb_, k, i));
-  }
-
-  void finish() override;
-
-  Index16 toIndex() { return toWrapper<Index16>(); }
-};
-
 class Index32Builder
-  : public IndexBuilderBase<fbs::Index32,fbs::Key32,uint32_t,uint32_t> {
+  : public IndexBuilderBase<fbs::Index32, fbs::Key32, uint32_t> {
  public:
   Index32Builder()
-    : IndexBuilderBase<fbs::Index32,fbs::Key32,uint32_t,uint32_t>() {}
+    : IndexBuilderBase<fbs::Index32, fbs::Key32, uint32_t>() {}
   explicit Index32Builder(FBB* fbb, bool owns = false)
-    : IndexBuilderBase<fbs::Index32,fbs::Key32,uint32_t,uint32_t>(fbb, owns) {}
+    : IndexBuilderBase<fbs::Index32, fbs::Key32, uint32_t>(fbb, owns) {}
 
-  void addKeyIndex(uint32_t k, uint32_t i) {
-    IndexBuilderBase<fbs::Index32,fbs::Key32,uint32_t,uint32_t>::
-      addKeyIndex(fbs::CreateKey32(*fbb_, k, i));
+  void addKeyIndex(uint32_t k, const std::vector<uint64_t>* i) {
+    IndexBuilderBase<fbs::Index32, fbs::Key32, uint32_t>::
+      addKeyIndex(fbs::CreateKey32Direct(*fbb_, k, i));
   }
 
   void finish() override;
@@ -114,39 +78,21 @@ class Index32Builder
 };
 
 class Index64Builder
-  : public IndexBuilderBase<fbs::Index64,fbs::Key64,uint64_t,uint64_t> {
+  : public IndexBuilderBase<fbs::Index64, fbs::Key64, uint64_t> {
  public:
   Index64Builder()
-    : IndexBuilderBase<fbs::Index64,fbs::Key64,uint64_t,uint64_t>() {}
+    : IndexBuilderBase<fbs::Index64, fbs::Key64, uint64_t>() {}
   explicit Index64Builder(FBB* fbb, bool owns = false)
-    : IndexBuilderBase<fbs::Index64,fbs::Key64,uint64_t,uint64_t>(fbb, owns) {}
+    : IndexBuilderBase<fbs::Index64, fbs::Key64, uint64_t>(fbb, owns) {}
 
-  void addKeyIndex(uint64_t k, uint64_t i) {
-    IndexBuilderBase<fbs::Index64,fbs::Key64,uint64_t,uint64_t>::
-      addKeyIndex(fbs::CreateKey64(*fbb_, k, i));
+  void addKeyIndex(uint64_t k, const std::vector<uint64_t>* i) {
+    IndexBuilderBase<fbs::Index64, fbs::Key64, uint64_t>::
+      addKeyIndex(fbs::CreateKey64Direct(*fbb_, k, i));
   }
 
   void finish() override;
 
   Index64 toIndex() { return toWrapper<Index64>(); }
-};
-
-class SIndexBuilder
-  : public IndexBuilderBase<fbs::SIndex,fbs::SKey,std::string,uint64_t> {
- public:
-  SIndexBuilder()
-    : IndexBuilderBase<fbs::SIndex,fbs::SKey,std::string,uint64_t>() {}
-  explicit SIndexBuilder(FBB* fbb, bool owns = false)
-    : IndexBuilderBase<fbs::SIndex,fbs::SKey,std::string,uint64_t>(fbb, owns) {}
-
-  void addKeyIndex(const std::string& k, uint64_t i) {
-    IndexBuilderBase<fbs::SIndex,fbs::SKey,std::string,uint64_t>::
-      addKeyIndex(fbs::CreateSKeyDirect(*fbb_, k.c_str(), i));
-  }
-
-  void finish() override;
-
-  SIndex toIndex() { return toWrapper<SIndex>(); }
 };
 
 } // namespace ftt

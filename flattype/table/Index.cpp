@@ -19,16 +19,6 @@
 
 namespace ftt {
 
-std::string Index8::toDebugString() const {
-  return get() ?
-    acc::to<std::string>("Index8::", getName(), "[", size(), "]") : "";
-}
-
-std::string Index16::toDebugString() const {
-  return get() ?
-    acc::to<std::string>("Index16::", getName(), "[", size(), "]") : "";
-}
-
 std::string Index32::toDebugString() const {
   return get() ?
     acc::to<std::string>("Index32::", getName(), "[", size(), "]") : "";
@@ -37,11 +27,6 @@ std::string Index32::toDebugString() const {
 std::string Index64::toDebugString() const {
   return get() ?
     acc::to<std::string>("Index64::", getName(), "[", size(), "]") : "";
-}
-
-std::string SIndex::toDebugString() const {
-  return get() ?
-    acc::to<std::string>("SIndex::", getName(), "[", size(), "]") : "";
 }
 
 } // namespace ftt

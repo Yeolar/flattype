@@ -22,17 +22,13 @@
 
 namespace ftt {
 
-template <class FT, class KFT, class KType, class IType>
+template <class FT, class KFT, class KType>
 class IndexBase : public Wrapper<FT> {
  public:
   typedef KType key_type;
-  typedef IType index_type;
   typedef ::flatbuffers::Offset<KFT> offset;
-  typedef ::flatbuffers::Vector<offset> vector;
-  typedef typename vector::iterator iterator;
-  typedef typename vector::const_iterator const_iterator;
-
-  static constexpr index_type npos = std::numeric_limits<index_type>::max();
+  typedef typename ::flatbuffers::Vector<offset>::iterator iterator;
+  typedef typename ::flatbuffers::Vector<offset>::const_iterator const_iterator;
 
  public:
   IndexBase(const FT* index) : Wrapper<FT>(index) {}
@@ -52,13 +48,13 @@ class IndexBase : public Wrapper<FT> {
     return Wrapper<FT>::ptr_->name()->str();
   }
 
-  const vector* getKeys() const {
+  const ::flatbuffers::Vector<offset>* getKeys() const {
     return Wrapper<FT>::ptr_->keys();
   }
 
-  index_type getIndex(const key_type& key) const {
+  const ::flatbuffers::Vector<uint64_t>* getIndexes(const key_type& key) const {
     auto k = getKeys()->LookupByKey(key);
-    return k ? k->i() : npos;
+    return k ? k->i() : nullptr;
   }
 
   size_t size() const {
@@ -87,62 +83,26 @@ class IndexBase : public Wrapper<FT> {
   }
 };
 
-class Index8 : public IndexBase<fbs::Index8,fbs::Key8,uint8_t,uint8_t> {
- public:
-  Index8(const fbs::Index8* index)
-    : IndexBase<fbs::Index8,fbs::Key8,uint8_t,uint8_t>(index) {}
-  explicit Index8(const uint8_t* data)
-    : IndexBase<fbs::Index8,fbs::Key8,uint8_t,uint8_t>(data) {}
-  explicit Index8(::flatbuffers::DetachedBuffer&& data)
-    : IndexBase<fbs::Index8,fbs::Key8,uint8_t,uint8_t>(std::move(data)) {}
-
-  std::string toDebugString() const override;
-};
-
-class Index16 : public IndexBase<fbs::Index16,fbs::Key16,uint16_t,uint16_t> {
- public:
-  Index16(const fbs::Index16* index)
-    : IndexBase<fbs::Index16,fbs::Key16,uint16_t,uint16_t>(index) {}
-  explicit Index16(const uint8_t* data)
-    : IndexBase<fbs::Index16,fbs::Key16,uint16_t,uint16_t>(data) {}
-  explicit Index16(::flatbuffers::DetachedBuffer&& data)
-    : IndexBase<fbs::Index16,fbs::Key16,uint16_t,uint16_t>(std::move(data)) {}
-
-  std::string toDebugString() const override;
-};
-
-class Index32 : public IndexBase<fbs::Index32,fbs::Key32,uint32_t,uint32_t> {
+class Index32 : public IndexBase<fbs::Index32, fbs::Key32, uint32_t> {
  public:
   Index32(const fbs::Index32* index)
-    : IndexBase<fbs::Index32,fbs::Key32,uint32_t,uint32_t>(index) {}
+    : IndexBase<fbs::Index32, fbs::Key32, uint32_t>(index) {}
   explicit Index32(const uint8_t* data)
-    : IndexBase<fbs::Index32,fbs::Key32,uint32_t,uint32_t>(data) {}
+    : IndexBase<fbs::Index32, fbs::Key32, uint32_t>(data) {}
   explicit Index32(::flatbuffers::DetachedBuffer&& data)
-    : IndexBase<fbs::Index32,fbs::Key32,uint32_t,uint32_t>(std::move(data)) {}
+    : IndexBase<fbs::Index32, fbs::Key32, uint32_t>(std::move(data)) {}
 
   std::string toDebugString() const override;
 };
 
-class Index64 : public IndexBase<fbs::Index64,fbs::Key64,uint64_t,uint64_t> {
+class Index64 : public IndexBase<fbs::Index64, fbs::Key64, uint64_t> {
  public:
   Index64(const fbs::Index64* index)
-    : IndexBase<fbs::Index64,fbs::Key64,uint64_t,uint64_t>(index) {}
+    : IndexBase<fbs::Index64, fbs::Key64, uint64_t>(index) {}
   explicit Index64(const uint8_t* data)
-    : IndexBase<fbs::Index64,fbs::Key64,uint64_t,uint64_t>(data) {}
+    : IndexBase<fbs::Index64, fbs::Key64, uint64_t>(data) {}
   explicit Index64(::flatbuffers::DetachedBuffer&& data)
-    : IndexBase<fbs::Index64,fbs::Key64,uint64_t,uint64_t>(std::move(data)) {}
-
-  std::string toDebugString() const override;
-};
-
-class SIndex : public IndexBase<fbs::SIndex,fbs::SKey,std::string,uint64_t> {
- public:
-  SIndex(const fbs::SIndex* index)
-    : IndexBase<fbs::SIndex,fbs::SKey,std::string,uint64_t>(index) {}
-  explicit SIndex(const uint8_t* data)
-    : IndexBase<fbs::SIndex,fbs::SKey,std::string,uint64_t>(data) {}
-  explicit SIndex(::flatbuffers::DetachedBuffer&& data)
-    : IndexBase<fbs::SIndex,fbs::SKey,std::string,uint64_t>(std::move(data)) {}
+    : IndexBase<fbs::Index64, fbs::Key64, uint64_t>(std::move(data)) {}
 
   std::string toDebugString() const override;
 };

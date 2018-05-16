@@ -18,32 +18,6 @@
 
 namespace ftt {
 
-void Index8Builder::finish() {
-  if (finished_) {
-    return;
-  }
-  fbb_->Finish(
-      fbs::CreateIndex8(
-          *fbb_,
-          fbb_->CreateString(name_),
-          fbb_->CreateVectorOfSortedTables(&keys_)));
-  data_ = fbb_->Release();
-  finished_ = true;
-}
-
-void Index16Builder::finish() {
-  if (finished_) {
-    return;
-  }
-  fbb_->Finish(
-      fbs::CreateIndex16(
-          *fbb_,
-          fbb_->CreateString(name_),
-          fbb_->CreateVectorOfSortedTables(&keys_)));
-  data_ = fbb_->Release();
-  finished_ = true;
-}
-
 void Index32Builder::finish() {
   if (finished_) {
     return;
@@ -63,19 +37,6 @@ void Index64Builder::finish() {
   }
   fbb_->Finish(
       fbs::CreateIndex64(
-          *fbb_,
-          fbb_->CreateString(name_),
-          fbb_->CreateVectorOfSortedTables(&keys_)));
-  data_ = fbb_->Release();
-  finished_ = true;
-}
-
-void SIndexBuilder::finish() {
-  if (finished_) {
-    return;
-  }
-  fbb_->Finish(
-      fbs::CreateSIndex(
           *fbb_,
           fbb_->CreateString(name_),
           fbb_->CreateVectorOfSortedTables(&keys_)));

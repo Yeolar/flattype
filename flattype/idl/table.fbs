@@ -5,20 +5,14 @@ include "matrix.fbs";
 namespace ftt.fbs;
 
 union Index {
-    Index8, Index16, Index32, Index64, SIndex,
+    Index32, Index64,
 }
 
-table Key8  { k: ubyte  (key); b: ubyte; i: ubyte; }
-table Key16 { k: ushort (key); b: ubyte; i: ushort; }
-table Key32 { k: uint   (key); b: ubyte; i: uint; }
-table Key64 { k: ulong  (key); b: ubyte; i: ulong; }
-table SKey  { k: string (key); b: ubyte; i: ulong; }
+table Key32 { k: uint (key);  i: [ulong]; }
+table Key64 { k: ulong (key); i: [ulong]; }
 
-table Index8  { name: string (key); keys: [Key8]  (required); }
-table Index16 { name: string (key); keys: [Key16] (required); }
 table Index32 { name: string (key); keys: [Key32] (required); }
 table Index64 { name: string (key); keys: [Key64] (required); }
-table SIndex  { name: string (key); keys: [SKey]  (required); }
 
 table Table {
     bid: ubyte;

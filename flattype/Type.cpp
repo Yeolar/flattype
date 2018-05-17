@@ -21,7 +21,7 @@ namespace ftt {
 fbs::Any toAnyType(fbs::Json type) {
   switch (type) {
 #define ACC_JSON_TO_ANY_CASE(jft, aft) \
-    case fbs::Json_##jft: return fbs::Any_##aft;
+    case fbs::Json::jft: return fbs::Any::aft;
 
     ACC_JSON_TO_ANY_CASE(Null,   Null)
     ACC_JSON_TO_ANY_CASE(Bool,   Bool)
@@ -34,13 +34,13 @@ fbs::Any toAnyType(fbs::Json type) {
 
 #undef ACC_JSON_TO_ANY_CASE
   }
-  return fbs::Any_NONE;
+  return fbs::Any::NONE;
 }
 
 fbs::Json toJsonType(fbs::Any type) {
   switch (type) {
 #define ACC_ANY_TO_JSON_CASE(aft, jft) \
-    case fbs::Any_##aft: return fbs::Json_##jft;
+    case fbs::Any::aft: return fbs::Json::jft;
 
     ACC_ANY_TO_JSON_CASE(Null,        Null)
     ACC_ANY_TO_JSON_CASE(Bool,        Bool)
@@ -72,7 +72,7 @@ fbs::Json toJsonType(fbs::Any type) {
 
 #undef ACC_ANY_TO_JSON_CASE
   }
-  return fbs::Json_NONE;
+  return fbs::Json::NONE;
 }
 
 } // namespace ftt

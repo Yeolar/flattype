@@ -24,7 +24,7 @@ namespace ftt {
 copy(::flatbuffers::FlatBufferBuilder& fbb, fbs::Any type, const void* obj) {
   switch (type) {
 #define FTT_ANY_COPY_CASE(ft) \
-    case fbs::Any_##ft: \
+    case fbs::Any::ft: \
       return copy(fbb, *reinterpret_cast<const fbs::ft*>(obj)).Union();
 
     FTT_ANY_COPY_CASE(Null)
@@ -56,7 +56,7 @@ copy(::flatbuffers::FlatBufferBuilder& fbb, fbs::Any type, const void* obj) {
 
 #undef FTT_ANY_COPY_CASE
 
-    case fbs::Any_NONE:
+    case fbs::Any::NONE:
       ACC_CHECK_THROW(0, acc::Exception);
   }
   return ::flatbuffers::Offset<void>();

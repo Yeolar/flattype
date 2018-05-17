@@ -118,7 +118,7 @@ Matrix::getItemValue(size_t i, size_t j, T& value) const {
 inline fbs::Any
 Matrix::getItemType(size_t i, size_t j) const {
   auto item = getItem(i, j);
-  return item ? item->value_type() : fbs::Any_NONE;
+  return item ? item->value_type() : fbs::Any::NONE;
 }
 
 } // namespace ftt

@@ -40,7 +40,7 @@ copy(::flatbuffers::FlatBufferBuilder& fbb, const fbs::Array& obj) {
   std::vector<flatbuffers::Offset<void>> values;
   for (size_t i = 0; i < obj.value()->size(); i++) {
     fbs::Json type = obj.value_type()->GetEnum<fbs::Json>(i);
-    types.push_back(type);
+    types.push_back(acc::to<uint8_t>(type));
     values.push_back(copy(fbb, type, obj.value()->GetAs<void>(i)));
   }
   return fbs::CreateArrayDirect(fbb, &types, &values);

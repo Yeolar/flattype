@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#include "flattype/matrix/Tuple.h"
 #include "flattype/matrix/Stringize.h"
+#include "flattype/matrix/Tuple.h"
 
 namespace ftt {
 

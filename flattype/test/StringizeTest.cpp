@@ -15,8 +15,8 @@
  */
 
 #include <gtest/gtest.h>
-#include "flattype/Serialize.h"
 #include "flattype/Stringize.h"
+#include "flattype/Serialize.h"
 
 using namespace ftt;
 

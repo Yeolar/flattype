@@ -84,7 +84,7 @@ Tuple::getItemValue(size_t i, T& value) const {
 
 inline fbs::Any
 Tuple::getItemType(size_t i) const {
-  return i < ftt::size(ptr_) ? decodeOneType(ptr_, i) : fbs::Any_NONE;
+  return i < ftt::size(ptr_) ? decodeOneType(ptr_, i) : fbs::Any::NONE;
 }
 
 } // namespace ftt

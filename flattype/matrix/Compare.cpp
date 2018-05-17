@@ -22,7 +22,7 @@ namespace ftt {
 bool equal(fbs::Any type, const void* lhs, const void* rhs) {
   switch (type) {
 #define FTT_ANY_EQUAL_CASE(ft) \
-    case fbs::Any_##ft: \
+    case fbs::Any::ft: \
       if (!(*reinterpret_cast<const fbs::ft*>(lhs) == \
             *reinterpret_cast<const fbs::ft*>(rhs))) \
         return false; \
@@ -57,7 +57,7 @@ bool equal(fbs::Any type, const void* lhs, const void* rhs) {
 
 #undef FTT_ANY_EQUAL_CASE
 
-    case fbs::Any_NONE:
+    case fbs::Any::NONE:
       ACC_CHECK_THROW(0, acc::Exception);
   }
   return true;

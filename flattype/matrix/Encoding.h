@@ -16,6 +16,7 @@
 
 #pragma once
 
+#include "accelerator/Conv.h"
 #include "flattype/CommonIDLs.h"
 #include "flattype/Encoding.h"
 #include "flattype/Type.h"
@@ -44,8 +45,9 @@ inline ::flatbuffers::Offset<fbs::Tuple>
 encode(::flatbuffers::FlatBufferBuilder& fbb, const std::pair<K, V>& value) {
   std::vector<uint8_t> types;
   std::vector<flatbuffers::Offset<void>> values;
-  types.push_back(getAnyType<typename std::remove_const<K>::type>());
-  types.push_back(getAnyType<V>());
+  types.push_back(acc::to<uint8_t>(
+          getAnyType<typename std::remove_const<K>::type>()));
+  types.push_back(acc::to<uint8_t>(getAnyType<V>()));
   values.push_back(encode(fbb, value.first).Union());
   values.push_back(encode(fbb, value.second).Union());
   return fbs::CreateTupleDirect(fbb, &types, &values);
@@ -68,7 +70,7 @@ encode(::flatbuffers::FlatBufferBuilder& fbb,
   std::vector<uint8_t> types;
   std::vector<flatbuffers::Offset<void>> values;
   for (auto& i : value) {
-    types.push_back(fbs::Any_Tuple);
+    types.push_back(acc::to<uint8_t>(fbs::Any::Tuple));
     values.push_back(encode(fbb, i).Union());
   }
   return fbs::CreateTupleDirect(fbb, &types, &values);
@@ -93,7 +95,7 @@ encode(::flatbuffers::FlatBufferBuilder& fbb, const std::map<K, V>& value) {
   std::vector<uint8_t> types;
   std::vector<flatbuffers::Offset<void>> values;
   for (auto& i : value) {
-    types.push_back(fbs::Any_Tuple);
+    types.push_back(acc::to<uint8_t>(fbs::Any::Tuple));
     values.push_back(encode(fbb, i).Union());
   }
   return fbs::CreateTupleDirect(fbb, &types, &values);
@@ -146,7 +148,7 @@ vencodeImpl(::flatbuffers::FlatBufferBuilder& fbb,
             std::vector<uint8_t>& types,
             std::vector<flatbuffers::Offset<void>>& values,
             const T& arg) {
-  types.push_back(getAnyType<T>());
+  types.push_back(acc::to<uint8_t>(getAnyType<T>()));
   values.push_back(encode(fbb, arg).Union());
 }
 
@@ -166,7 +168,7 @@ vdecodeImpl(::flatbuffers::FlatBufferBuilder& fbb,
             const std::vector<uint8_t>& types,
             const std::vector<flatbuffers::Offset<void>>& values,
             T& arg) {
-  assert(getAnyType<T>() == static_cast<fbs::Any>(types[I]));
+  assert(acc::to<uint8_t>(getAnyType<T>()) == types[I]);
   decode(::flatbuffers::GetTemporaryPointer(fbb, values[I]), arg);
 }
 

@@ -167,7 +167,7 @@ MatrixBuilder::setItemValue(size_t i, size_t j, const T& value) {
 inline fbs::Any
 MatrixBuilder::getItemType(size_t i, size_t j) const {
   auto item = getItem(i, j);
-  return item ? item->value_type() : fbs::Any_NONE;
+  return item ? item->value_type() : fbs::Any::NONE;
 }
 
 } // namespace ftt

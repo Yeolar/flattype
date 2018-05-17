@@ -20,13 +20,13 @@ namespace ftt {
 
 fbs::Json toJsonType(acc::dynamic::Type type) {
   switch (type) {
-    case acc::dynamic::NULLT:  return fbs::Json_Null;
-    case acc::dynamic::ARRAY:  return fbs::Json_Array;
-    case acc::dynamic::BOOL:   return fbs::Json_Bool;
-    case acc::dynamic::DOUBLE: return fbs::Json_Double;
-    case acc::dynamic::INT64:  return fbs::Json_Int64;
-    case acc::dynamic::OBJECT: return fbs::Json_Object;
-    case acc::dynamic::STRING: return fbs::Json_String;
+    case acc::dynamic::NULLT:  return fbs::Json::Null;
+    case acc::dynamic::ARRAY:  return fbs::Json::Array;
+    case acc::dynamic::BOOL:   return fbs::Json::Bool;
+    case acc::dynamic::DOUBLE: return fbs::Json::Double;
+    case acc::dynamic::INT64:  return fbs::Json::Int64;
+    case acc::dynamic::OBJECT: return fbs::Json::Object;
+    case acc::dynamic::STRING: return fbs::Json::String;
   }
 }
 

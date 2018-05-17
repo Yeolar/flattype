@@ -69,25 +69,25 @@ TypeError::TypeError(const std::string& expected, fbs::Json actual)
 #define FTT_DYNAMIC_APPLY(type, apply)      \
   do {                                      \
     switch ((type)) {                       \
-      case fbs::Json_Null:                  \
+      case fbs::Json::Null:                  \
         apply(std::nullptr_t);              \
         break;                              \
-      case fbs::Json_Array:                 \
+      case fbs::Json::Array:                 \
         apply(Array);                       \
         break;                              \
-      case fbs::Json_Bool:                  \
+      case fbs::Json::Bool:                  \
         apply(bool);                        \
         break;                              \
-      case fbs::Json_Double:                \
+      case fbs::Json::Double:                \
         apply(double);                      \
         break;                              \
-      case fbs::Json_Int64:                 \
+      case fbs::Json::Int64:                 \
         apply(int64_t);                     \
         break;                              \
-      case fbs::Json_Object:                \
+      case fbs::Json::Object:                \
         apply(Object);                      \
         break;                              \
-      case fbs::Json_String:                \
+      case fbs::Json::String:                \
         apply(acc::StringPiece);            \
         break;                              \
       default:                              \
@@ -96,8 +96,8 @@ TypeError::TypeError(const std::string& expected, fbs::Json actual)
   } while (0)
 
 bool dynamic::operator<(dynamic const& o) const {
-  if (UNLIKELY(type_ == fbs::Json_Object || o.type_ == fbs::Json_Object ||
-               type_ == fbs::Json_Array || o.type_ == fbs::Json_Array)) {
+  if (UNLIKELY(type_ == fbs::Json::Object || o.type_ == fbs::Json::Object ||
+               type_ == fbs::Json::Array || o.type_ == fbs::Json::Array)) {
     throw TypeError("object", type_);
   }
   if (type_ != o.type_) {
@@ -172,17 +172,17 @@ std::size_t dynamic::size() const {
 
 std::size_t dynamic::hash() const {
   switch (type()) {
-  case fbs::Json_Object:
-  case fbs::Json_Array:
-  case fbs::Json_Null:
+  case fbs::Json::Object:
+  case fbs::Json::Array:
+  case fbs::Json::Null:
     throw TypeError("not null/object/array", type());
-  case fbs::Json_Int64:
+  case fbs::Json::Int64:
     return std::hash<int64_t>()(getInt());
-  case fbs::Json_Double:
+  case fbs::Json::Double:
     return std::hash<double>()(getDouble());
-  case fbs::Json_Bool:
+  case fbs::Json::Bool:
     return std::hash<bool>()(getBool());
-  case fbs::Json_String: {
+  case fbs::Json::String: {
     const auto& str = getString();
     return ::acc::hash::fnv32_buf(str.data(), str.size());
   }

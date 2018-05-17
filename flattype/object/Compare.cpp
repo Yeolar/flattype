@@ -22,7 +22,7 @@ namespace ftt {
 bool equal(fbs::Json type, const void* lhs, const void* rhs) {
   switch (type) {
 #define FTT_JSON_EQUAL_CASE(ft) \
-    case fbs::Json_##ft: \
+    case fbs::Json::ft: \
       if (!(*reinterpret_cast<const fbs::ft*>(lhs) == \
             *reinterpret_cast<const fbs::ft*>(rhs))) \
         return false; \
@@ -38,7 +38,7 @@ bool equal(fbs::Json type, const void* lhs, const void* rhs) {
 
 #undef FTT_JSON_EQUAL_CASE
 
-    case fbs::Json_NONE:
+    case fbs::Json::NONE:
       ACC_CHECK_THROW(0, acc::Exception);
   }
   return true;

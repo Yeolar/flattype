@@ -222,7 +222,7 @@ encodeJson(::flatbuffers::FlatBufferBuilder& fbb, const vvector<T>& value) {
   std::vector<uint8_t> rowTypes;
   std::vector<flatbuffers::Offset<void>> rowValues;
   for (auto& row : value) {
-    rowTypes.push_back(fbs::Json_Array);
+    rowTypes.push_back(acc::to<uint8_t>(fbs::Json::Array));
     rowValues.push_back(encodeJson(fbb, row).Union());
   }
   return fbs::CreateArrayDirect(fbb, &rowTypes, &rowValues);
@@ -368,7 +368,7 @@ encodeJsonArray(::flatbuffers::FlatBufferBuilder& fbb, const acc::dynamic& d) {
     switch (i.type()) {
 
 #define FTT_X(ft) \
-        types.push_back(fbs::Json_##ft); \
+        types.push_back(acc::to<uint8_t>(fbs::Json::ft)); \
         values.push_back(encodeJson##ft(fbb, i).Union())
 
       case acc::dynamic::NULLT:  FTT_X(Null);   break;
@@ -396,7 +396,7 @@ encodeJsonObject(::flatbuffers::FlatBufferBuilder& fbb, const acc::dynamic& d) {
         values.push_back( \
             fbs::CreatePairDirect( \
                 fbb, \
-                fbs::Json_##ft, \
+                fbs::Json::ft, \
                 encodeJson##ft(fbb, p.second).Union(), \
                 p.first.c_str()))
 

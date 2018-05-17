@@ -24,7 +24,7 @@ namespace ftt {
 copy(::flatbuffers::FlatBufferBuilder& fbb, fbs::Json type, const void* obj) {
   switch (type) {
 #define FTT_JSON_COPY_CASE(ft) \
-    case fbs::Json_##ft: \
+    case fbs::Json::ft: \
       return copy(fbb, *reinterpret_cast<const fbs::ft*>(obj)).Union();
 
     FTT_JSON_COPY_CASE(Null)
@@ -37,7 +37,7 @@ copy(::flatbuffers::FlatBufferBuilder& fbb, fbs::Json type, const void* obj) {
 
 #undef FTT_JSON_COPY_CASE
 
-    case fbs::Json_NONE:
+    case fbs::Json::NONE:
       ACC_CHECK_THROW(0, acc::Exception);
   }
   return ::flatbuffers::Offset<void>();

@@ -133,13 +133,13 @@ inline dynamic::IterableProxy<dynamic::const_item_iterator> dynamic::items()
   return get<Object>().value();
 }
 
-inline bool dynamic::isString() const { return type_ == fbs::Json_String; }
-inline bool dynamic::isObject() const { return type_ == fbs::Json_Object; }
-inline bool dynamic::isBool()   const { return type_ == fbs::Json_Bool; }
-inline bool dynamic::isArray()  const { return type_ == fbs::Json_Array; }
-inline bool dynamic::isDouble() const { return type_ == fbs::Json_Double; }
-inline bool dynamic::isInt()    const { return type_ == fbs::Json_Int64; }
-inline bool dynamic::isNull()   const { return type_ == fbs::Json_Null; }
+inline bool dynamic::isString() const { return type_ == fbs::Json::String; }
+inline bool dynamic::isObject() const { return type_ == fbs::Json::Object; }
+inline bool dynamic::isBool()   const { return type_ == fbs::Json::Bool; }
+inline bool dynamic::isArray()  const { return type_ == fbs::Json::Array; }
+inline bool dynamic::isDouble() const { return type_ == fbs::Json::Double; }
+inline bool dynamic::isInt()    const { return type_ == fbs::Json::Int64; }
+inline bool dynamic::isNull()   const { return type_ == fbs::Json::Null; }
 inline bool dynamic::isNumber() const { return isInt() || isDouble(); }
 
 inline fbs::Json dynamic::type() const {
@@ -260,23 +260,23 @@ inline dynamic::const_item_iterator dynamic::find(acc::StringPiece key) const {
   }; \
   //
 
-FTT_DYNAMIC_DEC_TYPEINFO(std::nullptr_t,      "null",    fbs::Json_Null)
-FTT_DYNAMIC_DEC_TYPEINFO(bool,                "boolean", fbs::Json_Bool)
-FTT_DYNAMIC_DEC_TYPEINFO(acc::StringPiece,    "string",  fbs::Json_String)
-FTT_DYNAMIC_DEC_TYPEINFO(dynamic::Array,      "array",   fbs::Json_Array)
-FTT_DYNAMIC_DEC_TYPEINFO(double,              "double",  fbs::Json_Double)
-FTT_DYNAMIC_DEC_TYPEINFO(int64_t,             "int64",   fbs::Json_Int64)
-FTT_DYNAMIC_DEC_TYPEINFO(dynamic::Object,     "object",  fbs::Json_Object)
+FTT_DYNAMIC_DEC_TYPEINFO(std::nullptr_t,      "null",    fbs::Json::Null)
+FTT_DYNAMIC_DEC_TYPEINFO(bool,                "boolean", fbs::Json::Bool)
+FTT_DYNAMIC_DEC_TYPEINFO(acc::StringPiece,    "string",  fbs::Json::String)
+FTT_DYNAMIC_DEC_TYPEINFO(dynamic::Array,      "array",   fbs::Json::Array)
+FTT_DYNAMIC_DEC_TYPEINFO(double,              "double",  fbs::Json::Double)
+FTT_DYNAMIC_DEC_TYPEINFO(int64_t,             "int64",   fbs::Json::Int64)
+FTT_DYNAMIC_DEC_TYPEINFO(dynamic::Object,     "object",  fbs::Json::Object)
 
 #undef FTT_DYNAMIC_DEC_TYPEINFO
 
 template<class T>
 T dynamic::asImpl() const {
   switch (type()) {
-  case fbs::Json_Int64:  return acc::to<T>(ftt::getValue<int64_t>(ptr_));
-  case fbs::Json_Double: return acc::to<T>(ftt::getValue<double>(ptr_));
-  case fbs::Json_Bool:   return acc::to<T>(ftt::getValue<bool>(ptr_));
-  case fbs::Json_String:
+  case fbs::Json::Int64:  return acc::to<T>(ftt::getValue<int64_t>(ptr_));
+  case fbs::Json::Double: return acc::to<T>(ftt::getValue<double>(ptr_));
+  case fbs::Json::Bool:   return acc::to<T>(ftt::getValue<bool>(ptr_));
+  case fbs::Json::String:
     return acc::to<T>(ftt::getValue<acc::StringPiece>(ptr_));
   default:
     throw TypeError("int/double/bool/string", type());
@@ -311,8 +311,8 @@ T& dynamic::getValue() {
     throw TypeError(TypeInfo<T>::name, type());
   }
   switch (type()) {
-  case fbs::Json_Int64:
-  case fbs::Json_Double:
+  case fbs::Json::Int64:
+  case fbs::Json::Double:
     return *const_cast<T*>(ftt::getValuePtr<T>(ptr_));
   default:
     throw TypeError("int/double", type());
@@ -325,10 +325,10 @@ T dynamic::getValue() const {
     throw TypeError(TypeInfo<T>::name, type());
   }
   switch (type()) {
-  case fbs::Json_Int64:
-  case fbs::Json_Double:
-  case fbs::Json_Bool:
-  case fbs::Json_String:
+  case fbs::Json::Int64:
+  case fbs::Json::Double:
+  case fbs::Json::Bool:
+  case fbs::Json::String:
     return ftt::getValue<T>(ptr_);
   default:
     throw TypeError("int/double/bool/string", type());
@@ -339,23 +339,23 @@ T dynamic::getValue() const {
 
 inline void dynamic::print(std::ostream& out) const {
   switch (type_) {
-    case fbs::Json_Null:
+    case fbs::Json::Null:
       out << "null";
       break;
-    case fbs::Json_Bool:
+    case fbs::Json::Bool:
       out << getAddress<bool>()->value();
       break;
-    case fbs::Json_Double:
+    case fbs::Json::Double:
       out << getAddress<double>()->value();
       break;
-    case fbs::Json_Int64:
+    case fbs::Json::Int64:
       out << getAddress<int64_t>()->value();
       break;
-    case fbs::Json_String:
+    case fbs::Json::String:
       out << getAddress<acc::StringPiece>()->value()->data();
       break;
-    case fbs::Json_Array:
-    case fbs::Json_Object: {
+    case fbs::Json::Array:
+    case fbs::Json::Object: {
       out << toPseudoJson(*this);
       break;
     }

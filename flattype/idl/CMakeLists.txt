@@ -6,7 +6,7 @@ foreach(fbs ${FLATTYPE_IDLS})
     execute_process(COMMAND
         ${flatbuffers_COMPILER}
             --cpp
-            #--scoped-enums
+            --scoped-enums
             --gen-mutable
             --gen-name-strings
             --gen-object-api

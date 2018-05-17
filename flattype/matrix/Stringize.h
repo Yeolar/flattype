@@ -44,7 +44,7 @@ template <class Tgt>
 void toAppendAny(fbs::Any type, const void* ptr, Tgt* result) {
   switch (type) {
 #define FTT_ANY_TO_APPEND_CASE(ft) \
-    case fbs::Any_##ft: \
+    case fbs::Any::ft: \
       acc::toAppend(*reinterpret_cast<const fbs::ft*>(ptr), result); \
       break;
 
@@ -76,12 +76,12 @@ void toAppendAny(fbs::Any type, const void* ptr, Tgt* result) {
 
 #undef FTT_ANY_TO_APPEND_CASE
 
-    case fbs::Any_Tuple:
+    case fbs::Any::Tuple:
       acc::toAppend('(', result);
       acc::toAppend(*reinterpret_cast<const fbs::Tuple*>(ptr), result);
       acc::toAppend(')', result);
       break;
-    case fbs::Any_NONE:
+    case fbs::Any::NONE:
       break;
   }
 }

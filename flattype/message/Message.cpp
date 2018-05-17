@@ -31,7 +31,7 @@ std::string Message::toDebugString() const {
                 ", code:", getCode(),
                 ", message:", getMessage(),
                 ", bdata:", Bucket(getBData()).toDebugString(),
-                ", jdata:", toPseudoJson(dynamic(fbs::Json_Object, getJData())),
+                ", jdata:", toPseudoJson(dynamic(fbs::Json::Object, getJData())),
                 ", vdata:", Tuple(getVData()).toDebugString(),
                 &out);
   return out;

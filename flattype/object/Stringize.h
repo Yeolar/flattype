@@ -43,7 +43,7 @@ template <class Tgt>
 void toAppendJson(fbs::Json type, const void* ptr, Tgt* result) {
   switch (type) {
 #define FTT_JSON_TO_APPEND_CASE(ft, b, e) \
-    case fbs::Json_##ft: \
+    case fbs::Json::ft: \
       if (b) acc::toAppend(b, result); \
       acc::toAppend(*reinterpret_cast<const fbs::ft*>(ptr), result); \
       if (e) acc::toAppend(e, result); \
@@ -59,7 +59,7 @@ void toAppendJson(fbs::Json type, const void* ptr, Tgt* result) {
 
 #undef FTT_JSON_TO_APPEND_CASE
 
-    case fbs::Json_NONE:
+    case fbs::Json::NONE:
       break;
   }
 }

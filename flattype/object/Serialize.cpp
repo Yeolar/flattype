@@ -35,7 +35,7 @@ struct Printer {
 
   void operator()(dynamic const& v) const {
     switch (v.type()) {
-    case fbs::Json_Double:
+    case fbs::Json::Double:
       if (!opts_.allow_nan_inf &&
           (std::isnan(v.asDouble()) || std::isinf(v.asDouble()))) {
         throw std::runtime_error("acc::toJson: JSON object value was a "
@@ -45,7 +45,7 @@ struct Printer {
                     opts_.double_mode,
                     opts_.double_num_digits);
       break;
-    case fbs::Json_Int64: {
+    case fbs::Json::Int64: {
       auto intval = v.asInt();
       if (opts_.javascript_safe) {
         // Use acc::to to check that this integer can be represented
@@ -55,23 +55,23 @@ struct Printer {
       acc::toAppend(intval, &out_);
       break;
     }
-    case fbs::Json_Bool:
+    case fbs::Json::Bool:
       out_ += v.asBool() ? "true" : "false";
       break;
-    case fbs::Json_Null:
+    case fbs::Json::Null:
       out_ += "null";
       break;
-    case fbs::Json_String:
+    case fbs::Json::String:
       escapeString(v.asString(), out_, opts_);
       break;
-    case fbs::Json_Object:
+    case fbs::Json::Object:
       printObject(v);
       break;
-    case fbs::Json_Array:
+    case fbs::Json::Array:
       printArray(v);
       break;
     default:
-      ACCCHECK(0) << "Bad type " << v.type();
+      ACC_THROW(acc::Exception, "Bad type ", v.type());
     }
   }
 

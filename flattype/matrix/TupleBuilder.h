@@ -90,7 +90,7 @@ inline void
 TupleBuilder::setItem(size_t i, fbs::Any type, const void* item) {
   assert(item != nullptr);
   resize(i);
-  types_[i] = type;
+  types_[i] = acc::to<uint8_t>(type);
   items_[i] = copy(*fbb_, type, item);
 }
 
@@ -130,7 +130,7 @@ TupleBuilder::setItemValue(size_t i, const T& value) {
 
 inline fbs::Any
 TupleBuilder::getItemType(size_t i) const {
-  return i < getCount() ? static_cast<fbs::Any>(types_[i]) : fbs::Any_NONE;
+  return i < getCount() ? acc::to<fbs::Any>(types_[i]) : fbs::Any::NONE;
 }
 
 } // namespace ftt

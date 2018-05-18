@@ -18,14 +18,14 @@
 
 #include "flattype/Builder.h"
 #include "flattype/CommonIDLs.h"
-#include "flattype/bucket/Index.h"
+#include "flattype/index/Index.h"
 
 namespace ftt {
 
-template <class FT, class KFT, class KType>
+template <class HMap>
 class IndexBuilderBase : public Builder {
  public:
-  typedef IndexBase<FT, KFT, KType> Index;
+  typedef IndexBase<HMap> Index;
 
  public:
   IndexBuilderBase() : Builder() {}
@@ -46,53 +46,49 @@ class IndexBuilderBase : public Builder {
     name_ = name;
   }
 
-  const std::vector<typename Index::offset>& getKeys() const {
-    return keys_;
-  }
-
-  void addKeyIndex(typename Index::offset ki) {
-    keys_.push_back(ki);
+  void buildHash(FBBFunc<void>&& builder) {
+    hash_ = builder(fbb_.get());
   }
 
  protected:
   std::string name_;
-  std::vector<typename Index::offset> keys_;
+  ::flatbuffers::Offset<void> hash_;
 };
 
-class Index32Builder
-  : public IndexBuilderBase<fbs::Index32, fbs::Key32, uint32_t> {
+class Index32Builder : public IndexBuilderBase<HashMap32> {
  public:
   Index32Builder()
-    : IndexBuilderBase<fbs::Index32, fbs::Key32, uint32_t>() {}
+    : IndexBuilderBase() {}
   explicit Index32Builder(FBB* fbb, bool owns = false)
-    : IndexBuilderBase<fbs::Index32, fbs::Key32, uint32_t>(fbb, owns) {}
-
-  void addKeyIndex(uint32_t k, const std::vector<uint64_t>* i) {
-    IndexBuilderBase<fbs::Index32, fbs::Key32, uint32_t>::
-      addKeyIndex(fbs::CreateKey32Direct(*fbb_, k, i));
-  }
+    : IndexBuilderBase(fbb, owns) {}
 
   void finish() override;
 
   Index32 toIndex() { return toWrapper<Index32>(); }
 };
 
-class Index64Builder
-  : public IndexBuilderBase<fbs::Index64, fbs::Key64, uint64_t> {
+class Index64Builder : public IndexBuilderBase<HashMap64> {
  public:
   Index64Builder()
-    : IndexBuilderBase<fbs::Index64, fbs::Key64, uint64_t>() {}
+    : IndexBuilderBase() {}
   explicit Index64Builder(FBB* fbb, bool owns = false)
-    : IndexBuilderBase<fbs::Index64, fbs::Key64, uint64_t>(fbb, owns) {}
-
-  void addKeyIndex(uint64_t k, const std::vector<uint64_t>* i) {
-    IndexBuilderBase<fbs::Index64, fbs::Key64, uint64_t>::
-      addKeyIndex(fbs::CreateKey64Direct(*fbb_, k, i));
-  }
+    : IndexBuilderBase(fbb, owns) {}
 
   void finish() override;
 
   Index64 toIndex() { return toWrapper<Index64>(); }
+};
+
+class IndexSBuilder : public IndexBuilderBase<HashMapS> {
+ public:
+  IndexSBuilder()
+    : IndexBuilderBase() {}
+  explicit IndexSBuilder(FBB* fbb, bool owns = false)
+    : IndexBuilderBase(fbb, owns) {}
+
+  void finish() override;
+
+  IndexS toIndex() { return toWrapper<IndexS>(); }
 };
 
 } // namespace ftt

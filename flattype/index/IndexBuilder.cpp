@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "flattype/bucket/IndexBuilder.h"
+#include "flattype/index/IndexBuilder.h"
 
 namespace ftt {
 
@@ -23,10 +23,11 @@ void Index32Builder::finish() {
     return;
   }
   fbb_->Finish(
-      fbs::CreateIndex32(
+      fbs::CreateIndex(
           *fbb_,
           fbb_->CreateString(name_),
-          fbb_->CreateVectorOfSortedTables(&keys_)));
+          fbs::HMap::HMap32,
+          hash_));
   data_ = fbb_->Release();
   finished_ = true;
 }
@@ -36,10 +37,25 @@ void Index64Builder::finish() {
     return;
   }
   fbb_->Finish(
-      fbs::CreateIndex64(
+      fbs::CreateIndex(
           *fbb_,
           fbb_->CreateString(name_),
-          fbb_->CreateVectorOfSortedTables(&keys_)));
+          fbs::HMap::HMap64,
+          hash_));
+  data_ = fbb_->Release();
+  finished_ = true;
+}
+
+void IndexSBuilder::finish() {
+  if (finished_) {
+    return;
+  }
+  fbb_->Finish(
+      fbs::CreateIndex(
+          *fbb_,
+          fbb_->CreateString(name_),
+          fbs::HMap::HMapS,
+          hash_));
   data_ = fbb_->Release();
   finished_ = true;
 }

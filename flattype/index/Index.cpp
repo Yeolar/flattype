@@ -15,18 +15,20 @@
  */
 
 #include "accelerator/Conv.h"
-#include "flattype/bucket/Index.h"
+#include "flattype/index/Index.h"
 
 namespace ftt {
 
 std::string Index32::toDebugString() const {
-  return get() ?
-    acc::to<std::string>("Index32::", getName(), "[", size(), "]") : "";
+  return get() ?  acc::to<std::string>("Index32::", getName()) : "";
 }
 
 std::string Index64::toDebugString() const {
-  return get() ?
-    acc::to<std::string>("Index64::", getName(), "[", size(), "]") : "";
+  return get() ?  acc::to<std::string>("Index64::", getName()) : "";
+}
+
+std::string IndexS::toDebugString() const {
+  return get() ?  acc::to<std::string>("IndexS::", getName()) : "";
 }
 
 } // namespace ftt

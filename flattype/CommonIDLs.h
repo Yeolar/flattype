@@ -19,6 +19,8 @@
 #include "accelerator/FBString.h"
 
 #include "flattype/idl/base_generated.h"
+#include "flattype/idl/hash_generated.h"
+#include "flattype/idl/index_generated.h"
 #include "flattype/idl/matrix_generated.h"
 #include "flattype/idl/bucket_generated.h"
 #include "flattype/idl/object_generated.h"

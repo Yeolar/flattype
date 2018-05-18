@@ -4,16 +4,6 @@ include "matrix.fbs";
 
 namespace ftt.fbs;
 
-union Index {
-    Index32, Index64,
-}
-
-table Key32 { k: uint (key);  i: [ulong]; }
-table Key64 { k: ulong (key); i: [ulong]; }
-
-table Index32 { name: string (key); keys: [Key32] (required); }
-table Index64 { name: string (key); keys: [Key64] (required); }
-
 table Bucket {
     bid: ubyte;
     name: string;

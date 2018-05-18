@@ -1,0 +1,13 @@
+// Copyright 2018 Yeolar
+
+include "hash.fbs";
+
+namespace ftt.fbs;
+
+table Index {
+    name: string;
+    hash: HMap (required);
+}
+
+root_type Index;
+

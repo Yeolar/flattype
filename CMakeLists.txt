@@ -87,27 +87,31 @@ configure_file(
 
 # Work on all sub directories
 add_subdirectory(flattype)
+add_subdirectory(flattype/bucket)
+add_subdirectory(flattype/hash)
 add_subdirectory(flattype/idl)
+add_subdirectory(flattype/index)
 add_subdirectory(flattype/matrix)
 add_subdirectory(flattype/message)
 add_subdirectory(flattype/object)
-add_subdirectory(flattype/bucket)
 
 add_library(flattype_static STATIC
     $<TARGET_OBJECTS:flattype_base>
+    $<TARGET_OBJECTS:flattype_bucket>
+    $<TARGET_OBJECTS:flattype_index>
     $<TARGET_OBJECTS:flattype_matrix>
     $<TARGET_OBJECTS:flattype_message>
     $<TARGET_OBJECTS:flattype_object>
-    $<TARGET_OBJECTS:flattype_bucket>
 )
 set_target_properties(flattype_static PROPERTIES OUTPUT_NAME flattype)
 
 add_library(flattype_shared SHARED
     $<TARGET_OBJECTS:flattype_base>
+    $<TARGET_OBJECTS:flattype_bucket>
+    $<TARGET_OBJECTS:flattype_index>
     $<TARGET_OBJECTS:flattype_matrix>
     $<TARGET_OBJECTS:flattype_message>
     $<TARGET_OBJECTS:flattype_object>
-    $<TARGET_OBJECTS:flattype_bucket>
 )
 set_target_properties(flattype_shared PROPERTIES OUTPUT_NAME flattype)
 

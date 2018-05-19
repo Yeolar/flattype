@@ -62,7 +62,7 @@ check_cxx_source_compiles("
         int ret = strerror_r(ENOMEM, buf, sizeof(buf));
         return ret;
     }"
-    RDD_HAVE_XSI_STRERROR_R)
+    FTT_HAVE_XSI_STRERROR_R)
 
 if(GFLAGS_FOUND)
     set(CMAKE_REQUIRED_LIBRARIES "gflags")
@@ -71,12 +71,12 @@ if(GFLAGS_FOUND)
         #include <gflags/gflags.h>
         void foo() { google::GetArgv(); }
         int main() { return 0; }"
-        RDD_UNUSUAL_GFLAGS_NAMESPACE)
+        FTT_UNUSUAL_GFLAGS_NAMESPACE)
 
-    if(RDD_UNUSUAL_GFLAGS_NAMESPACE)
-        set(RDD_GFLAGS_NAMESPACE "google")
+    if(FTT_UNUSUAL_GFLAGS_NAMESPACE)
+        set(FTT_GFLAGS_NAMESPACE "google")
     else()
-        set(RDD_GFLAGS_NAMESPACE "gflags")
+        set(FTT_GFLAGS_NAMESPACE "gflags")
     endif()
 endif()
 

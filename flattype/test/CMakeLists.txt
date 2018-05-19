@@ -1,4 +1,4 @@
-# Copyright 2017 Yeolar
+# Copyright 2018 Yeolar
 
 set(FLATTYPE_BASE_TEST_SRCS
     StringizeTest.cpp

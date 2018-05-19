@@ -1,4 +1,4 @@
-# Copyright 2017 Yeolar
+# Copyright 2018 Yeolar
 
 set(FLATTYPE_MATRIX_TEST_SRCS
     SerializeTest.cpp

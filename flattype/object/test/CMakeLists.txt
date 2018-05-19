@@ -1,4 +1,4 @@
-# Copyright 2017 Yeolar
+# Copyright 2018 Yeolar
 
 set(FLATTYPE_OBJECT_TEST_SRCS
     DynamicTest.cpp

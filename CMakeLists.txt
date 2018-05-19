@@ -1,4 +1,4 @@
-# Copyright (C) 2018, Yeolar
+# Copyright 2018 Yeolar
 
 # Setup compiler
 #set(CMAKE_C_COMPILER gcc)

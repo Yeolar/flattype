@@ -48,6 +48,7 @@ include_directories(
     ${accelerator_INCLUDE_DIR}
     ${flatbuffers_INCLUDE_DIR}
     ${PROJECT_SOURCE_DIR}
+    ${PROJECT_BINARY_DIR}
 )
 
 # Check and setup configurations

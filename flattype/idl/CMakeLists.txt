@@ -12,7 +12,7 @@ foreach(fbs ${FLATTYPE_IDLS})
             --gen-name-strings
             --gen-object-api
             #--cpp-str-type acc::fbstring
-            -o ${PROJECT_SOURCE_DIR}/flattype/idl/
+            -o ${PROJECT_BINARY_DIR}/flattype/idl/
             -I ${PROJECT_SOURCE_DIR}/flattype/idl/
             ${fbs})
 endforeach()

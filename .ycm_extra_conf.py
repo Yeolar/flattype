@@ -54,6 +54,7 @@ flags = [
 '/usr/local/include',
 
 '-isystem', ROOT,
+'-isystem', os.path.join(ROOT, 'build'),
 '-isystem', os.path.join(ROOT, 'build/accelerator/src/accelerator'),
 '-isystem', os.path.join(ROOT, 'build/flatbuffers/src/flatbuffers/include'),
 ]

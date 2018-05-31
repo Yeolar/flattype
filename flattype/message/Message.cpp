@@ -15,10 +15,10 @@
  */
 
 #include "accelerator/Conv.h"
+#include "flattype/bucket/Bucket.h"
 #include "flattype/matrix/Tuple.h"
 #include "flattype/message/Message.h"
 #include "flattype/object/dynamic.h"
-#include "flattype/bucket/Bucket.h"
 
 namespace ftt {
 

@@ -14,16 +14,33 @@
  * limitations under the License.
  */
 
-#pragma once
+#include "flattype/query/OperationBuilder.h"
 
-#include "accelerator/FBString.h"
+namespace ftt {
 
-#include "flattype/idl/base_generated.h"
-#include "flattype/idl/hash_generated.h"
-#include "flattype/idl/index_generated.h"
-#include "flattype/idl/matrix_generated.h"
-#include "flattype/idl/bucket_generated.h"
-#include "flattype/idl/object_generated.h"
-#include "flattype/idl/message_generated.h"
-#include "flattype/idl/query_generated.h"
+fbs::Op OperationBuilder::getCmd() const {
+  return op_;
+}
 
+void OperationBuilder::setCmd(fbs::Op op) {
+  op_ = op;
+}
+
+uint8_t OperationBuilder::getRType() const {
+  return rtype_;
+}
+
+void OperationBuilder::setRType(uint8_t rtype) {
+  rtype_ = rtype;
+}
+
+void OperationBuilder::finish() {
+  if (finished_) {
+    return;
+  }
+  fbb_->Finish(fbs::CreateOperation(*fbb_, op_, rtype_, params_));
+  data_ = fbb_->Release();
+  finished_ = true;
+}
+
+} // namespace ftt

@@ -1,0 +1,33 @@
+// Copyright 2018 Yeolar
+
+include "matrix.fbs";
+
+namespace ftt.fbs;
+
+enum Op : ubyte {
+    None = 0,
+    Select,
+    Filter, Eq, NotEq, Le, Lt, Ge, Gt, In, NotIn,
+    Orderby, OrderbyDesc, OrderbyPartial, OrderbyPartialDesc,
+    Top,
+    Compute, Avg, Sum, Min, Max,
+    Join,
+    RunUDF,
+}
+
+table Operation {
+    cmd: Op;
+    rtype: ubyte;
+    params: Tuple;
+}
+
+table Query {
+    key: ulong;
+    uri: string;
+    operations: [Operation];
+    opbegin: ulong = 0;
+    opend: ulong = -1;
+}
+
+root_type Query;
+

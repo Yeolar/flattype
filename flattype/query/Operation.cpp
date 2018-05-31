@@ -41,4 +41,8 @@ uint8_t Operation::getRType() const {
   return ptr_ ? ptr_->rtype() : 0;
 }
 
+const fbs::Tuple* Operation::getParams() const {
+  return ptr_ ? ptr_->params() : nullptr;
+}
+
 } // namespace ftt

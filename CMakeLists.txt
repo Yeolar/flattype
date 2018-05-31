@@ -92,6 +92,7 @@ add_subdirectory(flattype/index)
 add_subdirectory(flattype/matrix)
 add_subdirectory(flattype/message)
 add_subdirectory(flattype/object)
+add_subdirectory(flattype/query)
 
 add_library(flattype_static STATIC
     $<TARGET_OBJECTS:flattype_base>
@@ -100,6 +101,7 @@ add_library(flattype_static STATIC
     $<TARGET_OBJECTS:flattype_matrix>
     $<TARGET_OBJECTS:flattype_message>
     $<TARGET_OBJECTS:flattype_object>
+    $<TARGET_OBJECTS:flattype_query>
 )
 set_target_properties(flattype_static PROPERTIES OUTPUT_NAME flattype)
 
@@ -110,6 +112,7 @@ add_library(flattype_shared SHARED
     $<TARGET_OBJECTS:flattype_matrix>
     $<TARGET_OBJECTS:flattype_message>
     $<TARGET_OBJECTS:flattype_object>
+    $<TARGET_OBJECTS:flattype_query>
 )
 set_target_properties(flattype_shared PROPERTIES OUTPUT_NAME flattype)
 

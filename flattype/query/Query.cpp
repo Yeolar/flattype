@@ -15,6 +15,7 @@
  */
 
 #include "accelerator/Conv.h"
+#include "flattype/query/Operation.h"
 #include "flattype/query/Query.h"
 
 namespace ftt {

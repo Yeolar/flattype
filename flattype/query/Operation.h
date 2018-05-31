@@ -40,6 +40,7 @@ class Operation : public Wrapper<fbs::Operation> {
 
   fbs::Op getCmd() const;
   uint8_t getRType() const;
+  const fbs::Tuple* getParams() const;
 
   template <class... Args>
   void getParams(Args&... args) const;

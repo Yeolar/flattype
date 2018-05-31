@@ -9,7 +9,7 @@ project(flattype)
 
 cmake_minimum_required(VERSION 3.2)
 
-set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake-scripts")
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake-scripts)
 
 # Set project version
 set(VERSION_MAJOR 1)
@@ -20,6 +20,8 @@ set(VERSION_PATCH 1)
 set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 find_package(Threads REQUIRED)
 find_package(GFlags REQUIRED)
+find_package(Accelerator REQUIRED)
+find_package(Flatbuffers REQUIRED)
 
 # Optional packages
 find_package(GTest)
@@ -31,24 +33,20 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 
-# Add external
-include(accelerator)
-include(flatbuffers)
-
 # Link libraries
 link_libraries(
-    ${accelerator_STATIC_LIBRARIES}
-    ${flatbuffers_STATIC_LIBRARIES}
     ${CMAKE_THREAD_LIBS_INIT}
     ${CMAKE_DL_LIBS}
     ${GFLAGS_LIBRARIES}
+    ${ACCELERATOR_LIBRARY}
+    ${FLATBUFFERS_LIBRARY}
 )
 
 include_directories(
-    ${accelerator_INCLUDE_DIR}
-    ${flatbuffers_INCLUDE_DIR}
     ${PROJECT_SOURCE_DIR}
     ${PROJECT_BINARY_DIR}
+    ${ACCELERATOR_INCLUDE_DIR}
+    ${FLATBUFFERS_INCLUDE_DIR}
 )
 
 # Check and setup configurations
@@ -82,8 +80,8 @@ if(GFLAGS_FOUND)
 endif()
 
 configure_file(
-    "${PROJECT_SOURCE_DIR}/flattype/flattype-config.h.in"
-    "${PROJECT_SOURCE_DIR}/flattype/flattype-config.h"
+    ${PROJECT_SOURCE_DIR}/flattype/flattype-config.h.in
+    ${PROJECT_SOURCE_DIR}/flattype/flattype-config.h
 )
 
 # Work on all sub directories
@@ -140,13 +138,22 @@ if(GTEST_FOUND)
 endif()
 
 # Pack
+set(CPACK_SYSTEM_NAME "amd64")
+find_program(DPKG_CMD dpkg)
+if(DPKG_CMD)
+    execute_process(
+        COMMAND "${DPKG_CMD}" --print-architecture
+        OUTPUT_VARIABLE CPACK_SYSTEM_NAME
+        OUTPUT_STRIP_TRAILING_WHITESPACE)
+endif()
+
 include(InstallRequiredSystemLibraries)
+set(CPACK_GENERATOR "DEB;TXZ")
 set(CPACK_PACKAGE_VERSION_MAJOR "${VERSION_MAJOR}")
 set(CPACK_PACKAGE_VERSION_MINOR "${VERSION_MINOR}")
 set(CPACK_PACKAGE_VERSION_PATCH "${VERSION_PATCH}")
-set(CPACK_GENERATOR "DEB")
-set(CPACK_SOURCE_GENERATOR "TGZ")
-SET(CPACK_PACKAGE_DESCRIPTION "flattype: Flat type based on flatbuffers.")
 SET(CPACK_PACKAGE_CONTACT "rdd@rddoc.com")
+SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "flattype: Flat type based on flatbuffers.")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libgflags-dev,accelerator,flatbuffers")
 include(CPack)
 

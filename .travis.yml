@@ -17,6 +17,7 @@ addons:
   apt:
     sources:
       - ubuntu-toolchain-r-test
+      - sourceline: 'deb http://package.rddoc.com/debian ./'
     packages:
       - g++-4.9
       - cmake
@@ -25,6 +26,8 @@ addons:
       - libgtest-dev
       - zlib1g-dev
       - openssl
+      - accelerator
+      - flatbuffers
 
 before_install:
   - sudo wget https://github.com/google/googletest/archive/release-1.7.0.tar.gz

@@ -4,7 +4,7 @@ file(GLOB FLATTYPE_IDLS *.fbs)
 
 foreach(fbs ${FLATTYPE_IDLS})
     execute_process(COMMAND
-        ${flatbuffers_COMPILER}
+        ${FLATBUFFERS_FLATC}
             --cpp
             --no-includes
             --scoped-enums

@@ -1,0 +1,11 @@
+# bunder config
+
+project:
+    flattype
+
+build:
+    path: './build'
+
+depend:
+    - accelerator-1.2.3
+    - flatbuffers-1.9.0

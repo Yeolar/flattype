@@ -44,7 +44,6 @@ link_libraries(
 
 include_directories(
     ${PROJECT_SOURCE_DIR}
-    ${PROJECT_BINARY_DIR}
     ${ACCELERATOR_INCLUDE_DIR}
     ${FLATBUFFERS_INCLUDE_DIR}
 )

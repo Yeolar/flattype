@@ -46,7 +46,6 @@ flags = [
 'c++',
 
 '-isystem', ROOT,
-'-isystem', os.path.join(ROOT, 'build'),
 '-isystem', os.path.join(ROOT, 'build/accelerator/accelerator/include'),
 '-isystem', os.path.join(ROOT, 'build/flatbuffers/flatbuffers/include'),
 '-isystem', '/usr/local/include',

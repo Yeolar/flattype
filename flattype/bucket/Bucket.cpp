@@ -24,12 +24,13 @@ namespace ftt {
 std::string Bucket::toDebugString() const {
   std::string out;
   if (!get()) {
-    return "Bucket::<NULL>";
+    return "{}";
   }
-  acc::toAppend("Bucket::", getName(),
+  acc::toAppend("{ name:", getName(),
                 ", bid:", getBID(),
                 ", fields:", acc::join(',', getFields()),
                 ", matrix:", Matrix(getMatrix()).toDebugString(),
+                " }",
                 &out);
   return out;
 }

@@ -20,15 +20,15 @@
 namespace ftt {
 
 std::string Index32::toDebugString() const {
-  return get() ?  acc::to<std::string>("Index32::", getName()) : "";
+  return get() ?  acc::to<std::string>("{ 4:", getName(), " }") : "{}";
 }
 
 std::string Index64::toDebugString() const {
-  return get() ?  acc::to<std::string>("Index64::", getName()) : "";
+  return get() ?  acc::to<std::string>("{ 8:", getName(), " }") : "{}";
 }
 
 std::string IndexS::toDebugString() const {
-  return get() ?  acc::to<std::string>("IndexS::", getName()) : "";
+  return get() ?  acc::to<std::string>("{ s:", getName(), " }") : "{}";
 }
 
 } // namespace ftt

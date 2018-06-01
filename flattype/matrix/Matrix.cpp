@@ -22,10 +22,10 @@ namespace ftt {
 std::string Matrix::toDebugString() const {
   std::string out;
   if (!get()) {
-    return "Matrix::<NULL>";
+    return "{}";
   }
 
-  acc::toAppend("Matrix::", getRowCount(), "x", getColCount(), &out);
+  acc::toAppend("{ ", getRowCount(), "x", getColCount(), " }", &out);
   std::string sepline = '\n' + std::string(out.size(), '-');
   acc::toAppend(sepline, &out);
 

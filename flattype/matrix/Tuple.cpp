@@ -22,9 +22,9 @@ namespace ftt {
 std::string Tuple::toDebugString() const {
   std::string out;
   if (!get()) {
-    return "Tuple::<NULL>";
+    return "{}";
   }
-  acc::toAppend("Tuple::", *ptr_, &out);
+  acc::toAppend("{ ", *ptr_, " }", &out);
   return out;
 }
 

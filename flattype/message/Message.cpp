@@ -25,14 +25,14 @@ namespace ftt {
 std::string Message::toDebugString() const {
   std::string out;
   if (!get()) {
-    return "Message::<NULL>";
+    return "{}";
   }
-  acc::toAppend("Message::",
-                ", code:", getCode(),
+  acc::toAppend("{ code:", getCode(),
                 ", message:", getMessage(),
                 ", bdata:", Bucket(getBData()).toDebugString(),
                 ", jdata:", toPseudoJson(dynamic(fbs::Json::Object, getJData())),
                 ", vdata:", Tuple(getVData()).toDebugString(),
+                " }",
                 &out);
   return out;
 }

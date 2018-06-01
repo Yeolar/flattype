@@ -23,17 +23,20 @@ namespace ftt {
 std::string Query::toDebugString() const {
   std::string out;
   if (!get()) {
-    return "Query::<NULL>";
+    return "{}";
   }
-  acc::toAppend("Query::",
-                ", key:", getKey(),
+  acc::toAppend("{ key:", getKey(),
                 ", uri:", getURI(),
-                ", ops:",
+                ", ops:[",
                 &out);
-  size_t end = std::min(getEnd(), getOperationCount());
-  for (size_t i = getBegin(); i < end; i++) {
-    acc::toAppend("(", Operation(getOperation(i)).toDebugString(), ")", &out);
+  size_t b = getBegin();
+  size_t e = std::min(getEnd(), getOperationCount());
+  for (size_t i = b; i < e; i++) {
+    acc::toAppend(i > b ? ", " : "",
+                  Operation(getOperation(i)).toDebugString(),
+                  &out);
   }
+  acc::toAppend("] }", &out);
   return out;
 }
 

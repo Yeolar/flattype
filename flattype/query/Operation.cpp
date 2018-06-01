@@ -23,12 +23,12 @@ namespace ftt {
 std::string Operation::toDebugString() const {
   std::string out;
   if (!get()) {
-    return "Operation::<NULL>";
+    return "{}";
   }
-  acc::toAppend("Operation::",
-                ", cmd:", fbs::EnumNameOp(getCmd()),
+  acc::toAppend("{ cmd:", fbs::EnumNameOp(getCmd()),
                 ", rtype:", getRType(),
                 ", params:", Tuple(getParams()).toDebugString(),
+                " }",
                 &out);
   return out;
 }

@@ -269,6 +269,22 @@ decodeOne(const fbs::Matrix* matrix, size_t j, Args&... args) {
 
 //////////////////////////////////////////////////////////////////////
 
+// get <Args...> types
+template <class T>
+inline void
+getTypes(std::vector<ftt::fbs::Any>& types) {
+  types.push_back(getAnyType<T>());
+}
+
+template <class T, class... Args>
+inline void
+getTypes(std::vector<ftt::fbs::Any>& types) {
+  getTypes<T>(types);
+  getTypes<Args...>(types);
+}
+
+//////////////////////////////////////////////////////////////////////
+
 // vector<Item> encoding
 template <class T>
 inline void

@@ -17,7 +17,6 @@
 #include <gtest/gtest.h>
 #include "accelerator/GTestHelper.h"
 #include "flattype/Serialize.h"
-#include "flattype/matrix/Serialize.h"
 
 using namespace ftt;
 

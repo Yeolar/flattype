@@ -19,9 +19,11 @@
 #include <string>
 #include <vector>
 
+#include "accelerator/Conv.h"
 #include "accelerator/FBString.h"
 #include "accelerator/Range.h"
 #include "flattype/CommonIDLs.h"
+#include "flattype/Type.h"
 
 namespace ftt {
 
@@ -258,6 +260,204 @@ decode(const void* ptr, std::vector<const char*>& value) {
   for (auto i : *p->value()) {
     value.push_back(i->data());
   }
+}
+
+//////////////////////////////////////////////////////////////////////
+
+template <class T>
+using vvector = std::vector<std::vector<T>>;
+
+// Tuple decoding
+inline fbs::Any
+decodeOneType(const fbs::Tuple* ptr, int i) {
+  return ptr->value_type()->GetEnum<fbs::Any>(i);
+}
+
+template <class T>
+inline void
+decodeOne(const fbs::Tuple* ptr, int i, T& arg) {
+  assert(getAnyType<T>() == ptr->value_type()->GetEnum<Any>(i));
+  decode(ptr->value()->Get(i), arg);
+}
+
+// pair<K, V> encoding
+template <class K, class V>
+inline ::flatbuffers::Offset<fbs::Tuple>
+encode(::flatbuffers::FlatBufferBuilder& fbb, const std::pair<K, V>& value) {
+  std::vector<uint8_t> types;
+  std::vector<flatbuffers::Offset<void>> values;
+  types.push_back(
+      acc::to<uint8_t>(getAnyType<typename std::remove_const<K>::type>()));
+  types.push_back(acc::to<uint8_t>(getAnyType<V>()));
+  values.push_back(encode(fbb, value.first).Union());
+  values.push_back(encode(fbb, value.second).Union());
+  return fbs::CreateTupleDirect(fbb, &types, &values);
+}
+
+// pair<K, V> decoding
+template <class K, class V>
+inline void
+decode(const void* ptr, std::pair<K, V>& value) {
+  auto p = reinterpret_cast<const fbs::Tuple*>(ptr);
+  decode(p->value()->Get(0), value.first);
+  decode(p->value()->Get(1), value.second);
+}
+
+// vector<pair<K, V>> encoding
+template <class K, class V>
+inline ::flatbuffers::Offset<fbs::Tuple>
+encode(::flatbuffers::FlatBufferBuilder& fbb,
+       const std::vector<std::pair<K, V>>& value) {
+  std::vector<uint8_t> types;
+  std::vector<flatbuffers::Offset<void>> values;
+  for (auto& i : value) {
+    types.push_back(acc::to<uint8_t>(fbs::Any::Tuple));
+    values.push_back(encode(fbb, i).Union());
+  }
+  return fbs::CreateTupleDirect(fbb, &types, &values);
+}
+
+// vector<pair<K, V>> decoding
+template <class K, class V>
+inline void
+decode(const void* ptr, std::vector<std::pair<K, V>>& value) {
+  auto p = reinterpret_cast<const fbs::Tuple*>(ptr);
+  for (auto i : *p->value()) {
+    std::pair<K, V> item;
+    decode(i, item);
+    value.push_back(std::move(item));
+  }
+}
+
+// map<K, V> encoding
+template <class K, class V>
+inline ::flatbuffers::Offset<fbs::Tuple>
+encode(::flatbuffers::FlatBufferBuilder& fbb, const std::map<K, V>& value) {
+  std::vector<uint8_t> types;
+  std::vector<flatbuffers::Offset<void>> values;
+  for (auto& i : value) {
+    types.push_back(acc::to<uint8_t>(fbs::Any::Tuple));
+    values.push_back(encode(fbb, i).Union());
+  }
+  return fbs::CreateTupleDirect(fbb, &types, &values);
+}
+
+// map<K, V> decoding
+template <class K, class V>
+inline void
+decode(const void* ptr, std::map<K, V>& value) {
+  auto p = reinterpret_cast<const fbs::Tuple*>(ptr);
+  for (auto i : *p->value()) {
+    std::pair<K, V> item;
+    decode(i, item);
+    value.insert(std::move(item));
+  }
+}
+
+// vector<vector<T>> encoding
+template <class T>
+inline ::flatbuffers::Offset<fbs::Tuple>
+encode(::flatbuffers::FlatBufferBuilder& fbb, const vvector<T>& value) {
+  std::vector<uint8_t> rowTypes;
+  std::vector<flatbuffers::Offset<void>> rowValues;
+  for (auto& row : value) {
+    rowTypes.push_back(getAnyType<std::vector<T>>());
+    rowValues.push_back(encode(fbb, row).Union());
+  }
+  return fbs::CreateTupleDirect(fbb, &rowTypes, &rowValues);
+}
+
+// vector<vector<T>> decoding
+template <class T>
+inline void
+decode(const void* ptr, vvector<T>& value) {
+  auto p = reinterpret_cast<const fbs::Tuple*>(ptr);
+  for (auto row : *p->value()) {
+    std::vector<T> rowValue;
+    decode(row, rowValue);
+    value.push_back(std::move(rowValue));
+  }
+}
+
+//////////////////////////////////////////////////////////////////////
+
+namespace detail {
+
+template <class T>
+inline void
+vencodeImpl(::flatbuffers::FlatBufferBuilder& fbb,
+            std::vector<uint8_t>& types,
+            std::vector<flatbuffers::Offset<void>>& values,
+            const T& arg) {
+  types.push_back(acc::to<uint8_t>(getAnyType<T>()));
+  values.push_back(encode(fbb, arg).Union());
+}
+
+template <class T, class... Args>
+inline void
+vencodeImpl(::flatbuffers::FlatBufferBuilder& fbb,
+            std::vector<uint8_t>& types,
+            std::vector<flatbuffers::Offset<void>>& values,
+            const T& arg, const Args&... args) {
+  vencodeImpl(fbb, types, values, arg);
+  vencodeImpl(fbb, types, values, args...);
+}
+
+template <int I, class T>
+inline void
+vdecodeImpl(const ::flatbuffers::Vector<uint8_t>* types,
+            const ::flatbuffers::Vector<flatbuffers::Offset<void>>* values,
+            T& arg) {
+  assert(getAnyType<T>() == types->GetEnum<Any>(I));
+  decode(values->Get(I), arg);
+}
+
+template <int I, class T, class... Args>
+inline void
+vdecodeImpl(const ::flatbuffers::Vector<uint8_t>* types,
+            const ::flatbuffers::Vector<flatbuffers::Offset<void>>* values,
+            T& arg, Args&... args) {
+  vdecodeImpl<I>(types, values, arg);
+  vdecodeImpl<I+1>(types, values, args...);
+}
+
+template <int I, class T>
+inline void
+vdecodeImpl(::flatbuffers::FlatBufferBuilder& fbb,
+            const std::vector<uint8_t>& types,
+            const std::vector<flatbuffers::Offset<void>>& values,
+            T& arg) {
+  assert(acc::to<uint8_t>(getAnyType<T>()) == types[I]);
+  decode(::flatbuffers::GetTemporaryPointer(fbb, values[I]), arg);
+}
+
+template <int I, class T, class... Args>
+inline void
+vdecodeImpl(::flatbuffers::FlatBufferBuilder& fbb,
+            const std::vector<uint8_t>& types,
+            const std::vector<flatbuffers::Offset<void>>& values,
+            T& arg, Args&... args) {
+  vdecodeImpl<I>(fbb, types, values, arg);
+  vdecodeImpl<I+1>(fbb, types, values, args...);
+}
+
+} // namespace detail
+
+// Tuple encoding
+template <class... Args>
+inline ::flatbuffers::Offset<fbs::Tuple>
+vencode(::flatbuffers::FlatBufferBuilder& fbb, const Args&... args) {
+  std::vector<uint8_t> types;
+  std::vector<flatbuffers::Offset<void>> values;
+  detail::vencodeImpl(fbb, types, values, args...);
+  return fbs::CreateTupleDirect(fbb, &types, &values);
+}
+
+// Tuple decoding
+template <class... Args>
+inline void
+vdecode(const fbs::Tuple* ptr, Args&... args) {
+  detail::vdecodeImpl<0>(ptr->value_type(), ptr->value(), args...);
 }
 
 } // namespace ftt

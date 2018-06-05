@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-#include "flattype/matrix/TupleBuilder.h"
+#include "flattype/Stringize.h"
+#include "flattype/Tuple.h"
 
 namespace ftt {
 
-void TupleBuilder::finish() {
-  if (finished_) {
-    return;
+std::string Tuple::toDebugString() const {
+  std::string out;
+  if (!get()) {
+    return "{}";
   }
-  fbb_->Finish(fbs::CreateTupleDirect(*fbb_, &types_, &items_));
-  data_ = fbb_->Release();
-  finished_ = true;
+  acc::toAppend("{ ", *ptr_, " }", &out);
+  return out;
 }
 
 } // namespace ftt

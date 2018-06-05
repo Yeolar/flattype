@@ -2,6 +2,21 @@
 
 namespace ftt.fbs;
 
+union Any {
+    Null,
+    Bool,
+    Int8, Int16, Int32, Int64,
+    UInt8, UInt16, UInt32, UInt64,
+    Float, Double,
+    String,
+    BoolArray,
+    Int8Array, Int16Array, Int32Array, Int64Array,
+    UInt8Array, UInt16Array, UInt32Array, UInt64Array,
+    FloatArray, DoubleArray,
+    StringArray,
+    Tuple,
+}
+
 table Null        { }
 table Bool        { value: bool; }
 table Int8        { value: byte; }
@@ -27,4 +42,5 @@ table UInt64Array { value: [ulong]; }
 table FloatArray  { value: [float]; }
 table DoubleArray { value: [double]; }
 table StringArray { value: [string]; }
+table Tuple       { value: [Any]; }
 

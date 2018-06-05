@@ -23,7 +23,7 @@ namespace ftt {
 
 class Bucket : public Wrapper<fbs::Bucket> {
  public:
-  static constexpr uint8_t npos = std::numeric_limits<uint8_t>::max();
+  static constexpr uint16_t npos = std::numeric_limits<uint16_t>::max();
 
   Bucket(const fbs::Bucket* bucket) : Wrapper(bucket) {}
 
@@ -40,7 +40,7 @@ class Bucket : public Wrapper<fbs::Bucket> {
 
   std::string toDebugString() const override;
 
-  uint8_t getBID() const;
+  uint16_t getBID() const;
   std::string getName() const;
   std::vector<std::string> getFields() const;
   const fbs::Matrix* getMatrix() const;

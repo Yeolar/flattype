@@ -4,22 +4,6 @@ include "base.fbs";
 
 namespace ftt.fbs;
 
-union Any {
-    Null,
-    Bool,
-    Int8, Int16, Int32, Int64,
-    UInt8, UInt16, UInt32, UInt64,
-    Float, Double,
-    String,
-    BoolArray,
-    Int8Array, Int16Array, Int32Array, Int64Array,
-    UInt8Array, UInt16Array, UInt32Array, UInt64Array,
-    FloatArray, DoubleArray,
-    StringArray,
-    Tuple,
-}
-
-table Tuple  { value: [Any]; }
 table Item   { value: Any; }
 table Record { value: [Item]; }
 table Matrix { value: [Record]; }

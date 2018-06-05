@@ -35,8 +35,8 @@ class BucketBuilder : public Builder {
   BucketBuilder(BucketBuilder&&) = default;
   BucketBuilder& operator=(BucketBuilder&&) = default;
 
-  uint8_t getBID() const;
-  void setBID(uint8_t bid);
+  uint16_t getBID() const;
+  void setBID(uint16_t bid);
 
   std::string getName() const;
   void setName(const std::string& name);
@@ -51,7 +51,7 @@ class BucketBuilder : public Builder {
   Bucket toBucket() { return toWrapper<Bucket>(); }
 
  private:
-  uint8_t bid_{Bucket::npos};
+  uint16_t bid_{Bucket::npos};
   std::string name_;
   std::vector<std::string> fields_;
   ::flatbuffers::Offset<fbs::Matrix> matrix_;

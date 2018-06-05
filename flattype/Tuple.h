@@ -17,9 +17,9 @@
 #pragma once
 
 #include "flattype/CommonIDLs.h"
+#include "flattype/Encoding.h"
 #include "flattype/Util.h"
 #include "flattype/Wrapper.h"
-#include "flattype/matrix/Encoding.h"
 
 namespace ftt {
 

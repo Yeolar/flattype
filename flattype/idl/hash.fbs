@@ -1,16 +1,38 @@
 // Copyright 2018 Yeolar
 
+include "base.fbs";
+
 namespace ftt.fbs;
 
 union HMap {
     HMap32, HMap64, HMapS,
 }
 
-table HSlot32  { hs: uint; next: uint; key: uint;   indexes: [ulong]; }
-table HSlot64  { hs: uint; next: uint; key: ulong;  indexes: [ulong]; }
-table HSlotS   { hs: uint; next: uint; key: string; indexes: [ulong]; }
+table HSlot32 {
+    hs: uint;
+    next: uint;
+    key: uint;
+    value: Any;
+    indexes: [ulong];
+}
 
-table HMap32   { slots: [HSlot32] (required); }
-table HMap64   { slots: [HSlot64] (required); }
-table HMapS    { slots: [HSlotS] (required); }
+table HSlot64 {
+    hs: uint;
+    next: uint;
+    key: ulong;
+    value: Any;
+    indexes: [ulong];
+}
+
+table HSlotS {
+    hs: uint;
+    next: uint;
+    key: string;
+    value: Any;
+    indexes: [ulong];
+}
+
+table HMap32 { slots: [HSlot32] (required); }
+table HMap64 { slots: [HSlot64] (required); }
+table HMapS  { slots: [HSlotS] (required); }
 

@@ -16,7 +16,6 @@
 
 #include "accelerator/Exception.h"
 #include "flattype/Copy.h"
-#include "flattype/matrix/Copy.h"
 
 namespace ftt {
 

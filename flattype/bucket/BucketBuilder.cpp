@@ -18,11 +18,11 @@
 
 namespace ftt {
 
-uint8_t BucketBuilder::getBID() const {
+uint16_t BucketBuilder::getBID() const {
   return bid_;
 }
 
-void BucketBuilder::setBID(uint8_t bid) {
+void BucketBuilder::setBID(uint16_t bid) {
   bid_ = bid;
 }
 

@@ -35,7 +35,7 @@ std::string Bucket::toDebugString() const {
   return out;
 }
 
-uint8_t Bucket::getBID() const {
+uint16_t Bucket::getBID() const {
   return ptr_ ? ptr_->bid() : npos;
 }
 

@@ -1,6 +1,7 @@
 # Copyright 2018 Yeolar
 
 set(FLATTYPE_BASE_TEST_SRCS
+    SerializeTest.cpp
     StringizeTest.cpp
     TypeTest.cpp
     ValueTest.cpp

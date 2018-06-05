@@ -17,14 +17,15 @@
 #pragma once
 
 #include "flattype/CommonIDLs.h"
+#include "flattype/Encoding.h"
 
 namespace ftt {
 
 namespace detail {
 
 struct BIndex {
-  uint8_t  block;
-  uint8_t  keep_;
+  uint16_t block;
+  uint16_t keep_;
   uint32_t index;
 };
 
@@ -51,17 +52,30 @@ struct Slot {
   typedef FT ft_type;
   typedef Key key_type;
 
-  Key key;
-  const ::flatbuffers::Vector<uint64_t>* indexes;
+  Slot(const FT* slot) : slot_(slot) {}
 
-  Slot(const FT* slot)
-    : key(slot->key()),
-      indexes(slot->indexes()) {
+  Key key() {
+    return slot_->Key();
+  }
+
+  template <class T>
+  T value() const {
+    T v;
+    assert(slot_->value_type() == getAnyType<T>());
+    decode(slot_->value(), v);
+    return v;
+  }
+
+  const ::flatbuffers::Vector<uint64_t>* indexes() {
+    return slot_->indexes();
   }
 
   BIndex operator[](size_t i) const {
-    return u64ToBIndex(indexes->Get(i));
+    return u64ToBIndex(slot_->indexes()->Get(i));
   }
+
+ private:
+  const FT* slot_;
 };
 
 typedef Slot<fbs::HSlot32, uint32_t> Slot32;

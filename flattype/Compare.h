@@ -127,4 +127,9 @@ inline bool operator<(
   return *lhs.value() < *rhs.value();
 }
 
+
+bool equal(fbs::Any type, const void* lhs, const void* rhs);
+
+bool operator==(const fbs::Tuple& lhs, const fbs::Tuple& rhs);
+
 } // namespace ftt

@@ -15,7 +15,7 @@
  */
 
 #include "accelerator/Conv.h"
-#include "flattype/matrix/Tuple.h"
+#include "flattype/Tuple.h"
 #include "flattype/query/Operation.h"
 
 namespace ftt {

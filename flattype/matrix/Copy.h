@@ -16,26 +16,10 @@
 
 #pragma once
 
-#include "accelerator/Conv.h"
 #include "flattype/CommonIDLs.h"
+#include "flattype/Copy.h"
 
 namespace ftt {
-
-::flatbuffers::Offset<void>
-copy(::flatbuffers::FlatBufferBuilder& fbb, fbs::Any type, const void* obj);
-
-// Tuple
-inline ::flatbuffers::Offset<fbs::Tuple>
-copy(::flatbuffers::FlatBufferBuilder& fbb, const fbs::Tuple& obj) {
-  std::vector<uint8_t> types;
-  std::vector<flatbuffers::Offset<void>> values;
-  for (size_t i = 0; i < obj.value()->size(); i++) {
-    fbs::Any type = obj.value_type()->GetEnum<fbs::Any>(i);
-    types.push_back(acc::to<uint8_t>(type));
-    values.push_back(copy(fbb, type, obj.value()->GetAs<void>(i)));
-  }
-  return fbs::CreateTupleDirect(fbb, &types, &values);
-}
 
 // Item
 inline ::flatbuffers::Offset<fbs::Item>

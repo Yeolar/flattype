@@ -18,8 +18,8 @@
 
 #include "flattype/Builder.h"
 #include "flattype/CommonIDLs.h"
-#include "flattype/matrix/Copy.h"
-#include "flattype/matrix/Tuple.h"
+#include "flattype/Copy.h"
+#include "flattype/Tuple.h"
 
 namespace ftt {
 

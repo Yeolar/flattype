@@ -28,6 +28,9 @@ inline const char* jsonTypeToString(fbs::Json type) {
   return fbs::EnumNameJson(type);
 }
 
+template <class Tgt>
+void toAppendAny(fbs::Any type, const void* ptr, Tgt* result);
+
 } // namespace ftt
 
 namespace acc {
@@ -63,12 +66,63 @@ template <class Tgt> void toAppend(const ftt::fbs::UInt64Array&, Tgt*);
 template <class Tgt> void toAppend(const ftt::fbs::FloatArray&,  Tgt*);
 template <class Tgt> void toAppend(const ftt::fbs::DoubleArray&, Tgt*);
 template <class Tgt> void toAppend(const ftt::fbs::StringArray&, Tgt*);
+template <class Tgt> void toAppend(const ftt::fbs::Tuple&,       Tgt*);
 
 } // namespace acc
 
 //////////////////////////////////////////////////////////////////////
 
 #include "accelerator/Conv.h"
+
+namespace ftt {
+
+template <class Tgt>
+void toAppendAny(fbs::Any type, const void* ptr, Tgt* result) {
+  switch (type) {
+#define FTT_ANY_TO_APPEND_CASE(ft) \
+    case fbs::Any::ft: \
+      acc::toAppend(*reinterpret_cast<const fbs::ft*>(ptr), result); \
+      break;
+
+    FTT_ANY_TO_APPEND_CASE(Null)
+    FTT_ANY_TO_APPEND_CASE(Bool)
+    FTT_ANY_TO_APPEND_CASE(Int8)
+    FTT_ANY_TO_APPEND_CASE(Int16)
+    FTT_ANY_TO_APPEND_CASE(Int32)
+    FTT_ANY_TO_APPEND_CASE(Int64)
+    FTT_ANY_TO_APPEND_CASE(UInt8)
+    FTT_ANY_TO_APPEND_CASE(UInt16)
+    FTT_ANY_TO_APPEND_CASE(UInt32)
+    FTT_ANY_TO_APPEND_CASE(UInt64)
+    FTT_ANY_TO_APPEND_CASE(Float)
+    FTT_ANY_TO_APPEND_CASE(Double)
+    FTT_ANY_TO_APPEND_CASE(String)
+    FTT_ANY_TO_APPEND_CASE(BoolArray)
+    FTT_ANY_TO_APPEND_CASE(Int8Array)
+    FTT_ANY_TO_APPEND_CASE(Int16Array)
+    FTT_ANY_TO_APPEND_CASE(Int32Array)
+    FTT_ANY_TO_APPEND_CASE(Int64Array)
+    FTT_ANY_TO_APPEND_CASE(UInt8Array)
+    FTT_ANY_TO_APPEND_CASE(UInt16Array)
+    FTT_ANY_TO_APPEND_CASE(UInt32Array)
+    FTT_ANY_TO_APPEND_CASE(UInt64Array)
+    FTT_ANY_TO_APPEND_CASE(FloatArray)
+    FTT_ANY_TO_APPEND_CASE(DoubleArray)
+    FTT_ANY_TO_APPEND_CASE(StringArray)
+
+#undef FTT_ANY_TO_APPEND_CASE
+
+    case fbs::Any::Tuple:
+      acc::toAppend('(', result);
+      acc::toAppend(*reinterpret_cast<const fbs::Tuple*>(ptr), result);
+      acc::toAppend(')', result);
+      break;
+    case fbs::Any::NONE:
+      break;
+  }
+}
+
+} // namespace ftt
 
 namespace acc {
 
@@ -126,5 +180,17 @@ FTT_BASE_TO_APPEND(DoubleArray)
 FTT_BASE_TO_APPEND(StringArray)
 
 #undef FTT_BASE_TO_APPEND
+
+template <class Tgt>
+void toAppend(const ftt::fbs::Tuple& value, Tgt* result) {
+  auto types = value.value_type();
+  for (size_t i = 0; i < types->size(); i++) {
+    if (i > 0) {
+      toAppend(',', result);
+    }
+    ftt::toAppendAny(
+        types->GetEnum<ftt::fbs::Any>(i), value.value()->Get(i), result);
+  }
+}
 
 } // namespace acc

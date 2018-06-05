@@ -135,7 +135,6 @@ install(TARGETS flattype_shared
 if(GTEST_FOUND)
     enable_testing()
     add_subdirectory(flattype/test)
-    add_subdirectory(flattype/matrix/test)
     add_subdirectory(flattype/object/test)
 endif()
 

@@ -21,11 +21,6 @@
 
 namespace ftt {
 
-bool equal(fbs::Any type, const void* lhs, const void* rhs);
-
-// Tuple
-bool operator==(const fbs::Tuple& lhs, const fbs::Tuple& rhs);
-
 // Item
 inline bool operator==(const fbs::Item& lhs, const fbs::Item& rhs) {
   return lhs.value_type() == rhs.value_type() &&

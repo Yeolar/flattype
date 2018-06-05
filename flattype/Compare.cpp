@@ -15,7 +15,7 @@
  */
 
 #include "accelerator/Exception.h"
-#include "flattype/matrix/Compare.h"
+#include "flattype/Compare.h"
 
 namespace ftt {
 

@@ -134,4 +134,10 @@ inline auto end(const FT* array)
   return array->value()->end();
 }
 
+//////////////////////////////////////////////////////////////////////
+
+inline acc::StringPiece stringPiece(::flatbuffers::String* s) {
+  return acc::StringPiece(s->data(), s->size());
+}
+
 } // namespace ftt

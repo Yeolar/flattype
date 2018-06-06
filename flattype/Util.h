@@ -136,7 +136,7 @@ inline auto end(const FT* array)
 
 //////////////////////////////////////////////////////////////////////
 
-inline acc::StringPiece stringPiece(::flatbuffers::String* s) {
+inline acc::StringPiece stringPiece(const ::flatbuffers::String* s) {
   return acc::StringPiece(s->data(), s->size());
 }
 

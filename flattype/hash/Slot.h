@@ -67,7 +67,7 @@ decode(const S* slot, T& value) {
   decode(slot->value(), value);
 }
 
-template <class F, class S>
+template <class S>
 inline typename std::enable_if<
   std::is_same<S, fbs::HSlot32>::value ||
   std::is_same<S, fbs::HSlot64>::value ||

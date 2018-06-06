@@ -51,7 +51,7 @@ class BucketBuilder : public Builder {
   Bucket toBucket() { return toWrapper<Bucket>(); }
 
  private:
-  uint16_t bid_{Bucket::npos};
+  uint16_t bid_{0};
   std::string name_;
   std::vector<std::string> fields_;
   ::flatbuffers::Offset<fbs::Matrix> matrix_;

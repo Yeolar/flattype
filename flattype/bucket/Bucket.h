@@ -23,8 +23,6 @@ namespace ftt {
 
 class Bucket : public Wrapper<fbs::Bucket> {
  public:
-  static constexpr uint16_t npos = std::numeric_limits<uint16_t>::max();
-
   Bucket(const fbs::Bucket* bucket) : Wrapper(bucket) {}
 
   explicit Bucket(const uint8_t* data)

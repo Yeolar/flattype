@@ -5,7 +5,7 @@ include "matrix.fbs";
 namespace ftt.fbs;
 
 table Bucket {
-    bid: ushort;
+    bid: ushort;    // start from 1
     name: string;
     matrix: Matrix;
     fields: [string];

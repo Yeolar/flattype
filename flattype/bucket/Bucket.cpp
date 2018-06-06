@@ -36,7 +36,7 @@ std::string Bucket::toDebugString() const {
 }
 
 uint16_t Bucket::getBID() const {
-  return ptr_ ? ptr_->bid() : npos;
+  return ptr_ ? ptr_->bid() : 0;
 }
 
 std::string Bucket::getName() const {

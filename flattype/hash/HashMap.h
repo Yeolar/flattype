@@ -29,8 +29,8 @@ template <class FT, class S>
 class HashMapBase {
  public:
   typedef FT ft_type;
-  typedef typename S::key_type key_type;
-  typedef typename S::ft_type value_type;
+  typedef S value_type;
+  typedef typename SlotIndexType<S>::type key_type;
 
   typedef struct ConstIterator {
     ConstIterator(const HashMapBase& owner, uint32_t slot)
@@ -142,8 +142,8 @@ class HashMapBase {
   ::flatbuffers::DetachedBuffer data_;
 };
 
-typedef HashMapBase<fbs::HMap32, Slot32> HashMap32;
-typedef HashMapBase<fbs::HMap64, Slot64> HashMap64;
-typedef HashMapBase<fbs::HMapS,  SlotS>  HashMapS;
+typedef HashMapBase<fbs::HMap32, fbs::HSlot32> HashMap32;
+typedef HashMapBase<fbs::HMap64, fbs::HSlot64> HashMap64;
+typedef HashMapBase<fbs::HMapS,  fbs::HSlotS>  HashMapS;
 
 } // namespace ftt

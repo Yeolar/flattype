@@ -25,8 +25,8 @@ namespace ftt {
 template <class S>
 class HashMapBuilderBase : public Builder {
  public:
-  typedef typename S::key_type key_type;
-  typedef typename S::ft_type value_type;
+  typedef S value_type;
+  typedef typename SlotIndexType<S>::type key_type;
 
   typedef struct ConstIterator {
     ConstIterator(const HashMapBuilderBase& owner, uint32_t slot)
@@ -206,7 +206,7 @@ class HashMapBuilderBase : public Builder {
   const std::vector<flatbuffers::Offset<value_type>>& slots_;
 };
 
-class HashMap32Builder : public HashMapBuilderBase<Slot32> {
+class HashMap32Builder : public HashMapBuilderBase<fbs::HSlot32> {
  public:
   explicit HashMap32Builder(size_t maxSize)
     : HashMapBuilderBase(maxSize) {}
@@ -218,7 +218,7 @@ class HashMap32Builder : public HashMapBuilderBase<Slot32> {
   HashMap32 toHashMap() { return toWrapper<HashMap32>(); }
 };
 
-class HashMap64Builder : public HashMapBuilderBase<Slot64> {
+class HashMap64Builder : public HashMapBuilderBase<fbs::HSlot64> {
  public:
   explicit HashMap64Builder(size_t maxSize)
     : HashMapBuilderBase(maxSize) {}
@@ -230,7 +230,7 @@ class HashMap64Builder : public HashMapBuilderBase<Slot64> {
   HashMap64 toHashMap() { return toWrapper<HashMap64>(); }
 };
 
-class HashMapSBuilder : public HashMapBuilderBase<SlotS> {
+class HashMapSBuilder : public HashMapBuilderBase<fbs::HSlotS> {
  public:
   explicit HashMapSBuilder(size_t maxSize)
     : HashMapBuilderBase(maxSize) {}

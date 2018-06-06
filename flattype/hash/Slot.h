@@ -47,40 +47,37 @@ inline uint64_t bindexToU64(BIndex i) {
   return detail::BIndexData(i).v;
 }
 
-template <class FT, class Key>
-struct Slot {
-  typedef FT ft_type;
-  typedef Key key_type;
+template <class T>
+struct SlotIndexType;
 
-  Slot(const FT* slot) : slot_(slot) {}
-
-  Key key() {
-    return slot_->Key();
-  }
-
-  template <class T>
-  T value() const {
-    T v;
-    assert(slot_->value_type() == getAnyType<T>());
-    decode(slot_->value(), v);
-    return v;
-  }
-
-  const ::flatbuffers::Vector<uint64_t>* indexes() {
-    return slot_->indexes();
-  }
-
-  BIndex operator[](size_t i) const {
-    return u64ToBIndex(slot_->indexes()->Get(i));
-  }
-
- private:
-  const FT* slot_;
+template <> struct SlotIndexType<fbs::HSlot32> { using type = uint32_t; };
+template <> struct SlotIndexType<fbs::HSlot64> { using type = uint64_t; };
+template <> struct SlotIndexType<fbs::HSlotS>  {
+  using type = ::flatbuffers::String*;
 };
 
-typedef Slot<fbs::HSlot32, uint32_t> Slot32;
-typedef Slot<fbs::HSlot64, uint64_t> Slot64;
-typedef Slot<fbs::HSlotS,  ::flatbuffers::String*> SlotS;
+template <class T, class S>
+inline typename std::enable_if<
+  std::is_same<S, fbs::HSlot32>::value ||
+  std::is_same<S, fbs::HSlot64>::value ||
+  std::is_same<S, fbs::HSlotS>::value
+  >::type
+decode(const S* slot, T& value) {
+  assert(slot->value_type() == getAnyType<T>());
+  decode(slot->value(), value);
+}
+
+template <class F, class S>
+inline typename std::enable_if<
+  std::is_same<S, fbs::HSlot32>::value ||
+  std::is_same<S, fbs::HSlot64>::value ||
+  std::is_same<S, fbs::HSlotS>::value
+  >::type
+forEachIndex(const S* slot, const std::function<void(BIndex)>& func) {
+  for (uint64_t i : *slot->indexes()) {
+    func(u64ToBIndex(i));
+  }
+}
 
 struct SlotState {
   enum : uint32_t {

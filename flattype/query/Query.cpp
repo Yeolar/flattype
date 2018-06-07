@@ -26,7 +26,7 @@ std::string toDebugString(const fbs::Operation* op) {
   if (!op) {
     return "{}";
   }
-  acc::toAppend("{ cmd:", fbs::EnumNameOp(op->cmd()),
+  acc::toAppend("{ cmd:", op->cmd(),
                 ", params:", Tuple(op->params()).toDebugString(),
                 " }",
                 &out);

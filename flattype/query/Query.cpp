@@ -15,6 +15,7 @@
  */
 
 #include "accelerator/Conv.h"
+#include "flattype/Tuple.h"
 #include "flattype/query/Operation.h"
 #include "flattype/query/Query.h"
 
@@ -22,7 +23,7 @@ namespace ftt {
 
 std::string toDebugString(const fbs::Operation* op) {
   std::string out;
-  if (!get()) {
+  if (!op) {
     return "{}";
   }
   acc::toAppend("{ cmd:", fbs::EnumNameOp(op->cmd()),
@@ -45,7 +46,7 @@ std::string Query::toDebugString() const {
   size_t e = std::min(getEnd(), getOperationCount());
   for (size_t i = b; i < e; i++) {
     acc::toAppend(i > b ? ", " : "",
-                  toDebugString(getOperation(i)),
+                  ftt::toDebugString(getOperation(i)),
                   &out);
   }
   acc::toAppend("] }", &out);

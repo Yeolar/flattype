@@ -48,7 +48,7 @@ class Query : public Wrapper<fbs::Query> {
 
   const fbs::Operation* getOperation(size_t i) const;
   template <class... Args>
-  void getOperation(size_t i, fbs::Op& cmd, Args&... args) const;
+  void getOperation(size_t i, uint32_t& cmd, Args&... args) const;
   template <class... Args>
   void getOperation(size_t i, Operation<Args...>& o) const;
 
@@ -57,7 +57,7 @@ class Query : public Wrapper<fbs::Query> {
 };
 
 template <class... Args>
-void Query::getOperation(size_t i, fbs::Op& cmd, Args&... args) const {
+void Query::getOperation(size_t i, uint32_t& cmd, Args&... args) const {
   auto op = getOperation(i);
   cmd = op->cmd();
   vdecode(op->params(), args...);

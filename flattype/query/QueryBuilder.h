@@ -44,13 +44,13 @@ class QueryBuilder : public Builder {
 
   const fbs::Operation* getOperation(size_t i) const;
   template <class... Args>
-  void getOperation(size_t i, fbs::Op& cmd, Args&... args) const;
+  void getOperation(size_t i, uint32_t& cmd, Args&... args) const;
   template <class... Args>
   void getOperation(size_t i, Operation<Args...>& o) const;
 
   void addOperation(FBBFunc<fbs::Operation>&& builder);
   template <class... Args>
-  void addOperation(fbs::Op cmd, const Args&... args);
+  void addOperation(uint32_t cmd, const Args&... args);
   template <class... Args>
   void addOperation(const Operation<Args...>& o);
 
@@ -75,7 +75,7 @@ class QueryBuilder : public Builder {
 };
 
 template <class... Args>
-void QueryBuilder::getOperation(size_t i, fbs::Op& cmd, Args&... args) const {
+void QueryBuilder::getOperation(size_t i, uint32_t& cmd, Args&... args) const {
   auto op = getOperation(i);
   cmd = op->cmd();
   vdecode(op->params(), args...);
@@ -89,7 +89,7 @@ void QueryBuilder::getOperation(size_t i, Operation<Args...>& o) const {
 }
 
 template <class... Args>
-void QueryBuilder::addOperation(fbs::Op cmd, const Args&... args) {
+void QueryBuilder::addOperation(uint32_t cmd, const Args&... args) {
   auto op = fbs::CreateOperation(*fbb_, cmd, vencode(*fbb_, args...));
   ops_.push_back(op);
 }

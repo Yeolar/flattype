@@ -16,6 +16,7 @@
 
 #pragma once
 
+#include "accelerator/Conv.h"
 #include "flattype/CommonIDLs.h"
 #include "flattype/Wrapper.h"
 
@@ -23,23 +24,25 @@ namespace ftt {
 
 template <class... Args>
 struct Operation {
-  ftt::fbs::Op cmd;
+  uint32_t cmd;
   std::tuple<Args...> params;
 
-  Operation(ftt::fbs::Op op, const Args&... args)
+  Operation(uint32_t op, const Args&... args)
     : cmd(op), params(args...) {}
-  Operation(ftt::fbs::Op op, Args&&... args)
+  Operation(uint32_t op, Args&&... args)
     : cmd(op), params(args...) {}
 };
 
-template <class... Args>
-Operation<Args...> makeOperation(fbs::Op op, const Args&... args) {
-  return Operation<Args...>(op, args...);
+template <class Op, class... Args>
+typename std::enable_if<std::is_enum<Op>::value, Operation<Args...>>::type
+makeOperation(Op op, const Args&... args) {
+  return Operation<Args...>(acc::to<uint32_t>(op), args...);
 }
 
-template <class... Args>
-Operation<Args...> makeOperation(fbs::Op op, Args&&... args) {
-  return Operation<Args...>(op, std::forward<Args...>(args)...);
+template <class Op, class... Args>
+typename std::enable_if<std::is_enum<Op>::value, Operation<Args...>>::type
+makeOperation(Op op, Args&&... args) {
+  return Operation<Args...>(acc::to<uint32_t>(op), std::forward<Args>(args)...);
 }
 
 } // namespace ftt

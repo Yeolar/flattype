@@ -17,7 +17,6 @@ enum Op : ubyte {
 
 table Operation {
     cmd: Op;
-    rtype: ubyte;
     params: Tuple;
 }
 

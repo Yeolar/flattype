@@ -26,19 +26,11 @@ void OperationBuilder::setCmd(fbs::Op op) {
   op_ = op;
 }
 
-uint8_t OperationBuilder::getRType() const {
-  return rtype_;
-}
-
-void OperationBuilder::setRType(uint8_t rtype) {
-  rtype_ = rtype;
-}
-
 void OperationBuilder::finish() {
   if (finished_) {
     return;
   }
-  fbb_->Finish(fbs::CreateOperation(*fbb_, op_, rtype_, params_));
+  fbb_->Finish(fbs::CreateOperation(*fbb_, op_, params_));
   data_ = fbb_->Release();
   finished_ = true;
 }

@@ -24,10 +24,10 @@ namespace ftt {
 
 class QueryBuilder : public Builder {
  public:
-  QueryBuilder() : Builder() {}
+  QueryBuilder() : Builder(), key_(uniqueKey_++) {}
 
   explicit QueryBuilder(FBB* fbb, bool owns = false)
-    : Builder(fbb, owns) {}
+    : Builder(fbb, owns), key_(uniqueKey_++) {}
 
   QueryBuilder(const QueryBuilder&) = delete;
   QueryBuilder& operator=(const QueryBuilder&) = delete;
@@ -36,13 +36,18 @@ class QueryBuilder : public Builder {
   QueryBuilder& operator=(QueryBuilder&&) = default;
 
   uint64_t getKey() const;
-  void setKey(uint64_t key);
 
   std::string getURI() const;
   void setURI(const std::string& uri);
 
   size_t getOperationCount() const;
+
+  template <class... Args>
+  void getOperation(size_t i, fbs::Op& cmd, Args&... args) const;
   const fbs::Operation* getOperation(size_t i) const;
+
+  template <class... Args>
+  void addOperation(fbs::Op cmd, const Args&... args);
   void addOperation(FBBFunc<fbs::Operation>&& builder);
 
   size_t getBegin() const;
@@ -56,11 +61,26 @@ class QueryBuilder : public Builder {
   Query toQuery() { return toWrapper<Query>(); }
 
  private:
+  static std::atomic<uint64_t> uniqueKey_;
+
   uint64_t key_;
   std::string uri_;
   std::vector<flatbuffers::Offset<fbs::Operation>> ops_;
   size_t opBegin_{0};
   size_t opEnd_{std::numeric_limits<size_t>::max()};
 };
+
+template <class... Args>
+void QueryBuilder::getOperation(size_t i, fbs::Op& cmd, Args&... args) const {
+  auto op = getOperation(i);
+  cmd = op->cmd();
+  vdecode((op->params()), args...);
+}
+
+template <class... Args>
+void QueryBuilder::addOperation(fbs::Op cmd, const Args&... args) {
+  auto op = fbs::CreateOperation(*fbb_, cmd, vencode(*fbb_, args...));
+  ops_.push_back(op);
+}
 
 } // namespace ftt

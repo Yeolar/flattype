@@ -18,12 +18,10 @@
 
 namespace ftt {
 
+std::atomic<uint64_t> QueryBuilder::uniqueKey_(0);
+
 uint64_t QueryBuilder::getKey() const {
   return key_;
-}
-
-void QueryBuilder::setKey(uint64_t key) {
-  key_ = key;
 }
 
 std::string QueryBuilder::getURI() const {

@@ -39,9 +39,6 @@ class OperationBuilder : public Builder {
   fbs::Op getCmd() const;
   void setCmd(fbs::Op op);
 
-  uint8_t getRType() const;
-  void setRType(uint8_t rtype);
-
   template <class... Args>
   void getParams(Args&... args) const;
   template <class... Args>
@@ -53,7 +50,6 @@ class OperationBuilder : public Builder {
 
  private:
   fbs::Op op_{fbs::Op::None};
-  uint8_t rtype_{0};
   ::flatbuffers::Offset<fbs::Tuple> params_;
 };
 

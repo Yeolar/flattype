@@ -26,7 +26,6 @@ std::string Operation::toDebugString() const {
     return "{}";
   }
   acc::toAppend("{ cmd:", fbs::EnumNameOp(getCmd()),
-                ", rtype:", getRType(),
                 ", params:", Tuple(getParams()).toDebugString(),
                 " }",
                 &out);
@@ -35,10 +34,6 @@ std::string Operation::toDebugString() const {
 
 fbs::Op Operation::getCmd() const {
   return ptr_ ? ptr_->cmd() : fbs::Op::None;
-}
-
-uint8_t Operation::getRType() const {
-  return ptr_ ? ptr_->rtype() : 0;
 }
 
 const fbs::Tuple* Operation::getParams() const {

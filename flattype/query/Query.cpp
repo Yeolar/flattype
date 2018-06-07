@@ -20,6 +20,18 @@
 
 namespace ftt {
 
+std::string toDebugString(const fbs::Operation* op) {
+  std::string out;
+  if (!get()) {
+    return "{}";
+  }
+  acc::toAppend("{ cmd:", fbs::EnumNameOp(op->cmd()),
+                ", params:", Tuple(op->params()).toDebugString(),
+                " }",
+                &out);
+  return out;
+}
+
 std::string Query::toDebugString() const {
   std::string out;
   if (!get()) {
@@ -33,7 +45,7 @@ std::string Query::toDebugString() const {
   size_t e = std::min(getEnd(), getOperationCount());
   for (size_t i = b; i < e; i++) {
     acc::toAppend(i > b ? ", " : "",
-                  Operation(getOperation(i)).toDebugString(),
+                  toDebugString(getOperation(i)),
                   &out);
   }
   acc::toAppend("] }", &out);

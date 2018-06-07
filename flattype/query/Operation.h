@@ -21,35 +21,25 @@
 
 namespace ftt {
 
-class Operation : public Wrapper<fbs::Operation> {
- public:
-  Operation(const fbs::Operation* operation) : Wrapper(operation) {}
+template <class... Args>
+struct Operation {
+  ftt::fbs::Op cmd;
+  std::tuple<Args...> params;
 
-  explicit Operation(const uint8_t* data)
-    : Wrapper(data) {}
-  explicit Operation(::flatbuffers::DetachedBuffer&& data)
-    : Wrapper(std::move(data)) {}
-
-  Operation(const Operation&) = delete;
-  Operation& operator=(const Operation&) = delete;
-
-  Operation(Operation&&) = default;
-  Operation& operator=(Operation&&) = default;
-
-  std::string toDebugString() const override;
-
-  fbs::Op getCmd() const;
-  const fbs::Tuple* getParams() const;
-
-  template <class... Args>
-  void getParams(Args&... args) const;
+  Operation(ftt::fbs::Op op, const Args&... args)
+    : cmd(op), params(args...) {}
+  Operation(ftt::fbs::Op op, Args&&... args)
+    : cmd(op), params(args...) {}
 };
 
 template <class... Args>
-void Operation::getParams(Args&... args) const {
-  if (ptr_) {
-    vdecode(ptr_->params(), args...);
-  }
+Operation<Args...> makeOperation(fbs::Op op, const Args&... args) {
+  return Operation<Args...>(op, args...);
+}
+
+template <class... Args>
+Operation<Args...> makeOperation(fbs::Op op, Args&&... args) {
+  return Operation<Args...>(op, std::forward<Args...>(args)...);
 }
 
 } // namespace ftt

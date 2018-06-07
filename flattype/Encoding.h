@@ -17,6 +17,7 @@
 #pragma once
 
 #include <string>
+#include <type_traits>
 #include <vector>
 
 #include "accelerator/Conv.h"
@@ -383,7 +384,7 @@ decode(const void* ptr, vvector<T>& value) {
 
 namespace detail {
 
-template <class T>
+template <int I, class T>
 inline void
 vencodeImpl(::flatbuffers::FlatBufferBuilder& fbb,
             std::vector<uint8_t>& types,
@@ -393,14 +394,24 @@ vencodeImpl(::flatbuffers::FlatBufferBuilder& fbb,
   values.push_back(encode(fbb, arg).Union());
 }
 
-template <class T, class... Args>
+template <int I, class T, class... Args>
 inline void
 vencodeImpl(::flatbuffers::FlatBufferBuilder& fbb,
             std::vector<uint8_t>& types,
             std::vector<flatbuffers::Offset<void>>& values,
             const T& arg, const Args&... args) {
-  vencodeImpl(fbb, types, values, arg);
-  vencodeImpl(fbb, types, values, args...);
+  vencodeImpl<I>(fbb, types, values, arg);
+  vencodeImpl<I+1>(fbb, types, values, args...);
+}
+
+template <int I, class... Args>
+inline typename std::enable_if<I < sizeof...(Args)>::type
+vencodeImpl(::flatbuffers::FlatBufferBuilder& fbb,
+            std::vector<uint8_t>& types,
+            std::vector<flatbuffers::Offset<void>>& values,
+            const std::tuple<Args...>& args) {
+  vencodeImpl<I>(fbb, types, values, std::get<I>(args));
+  vencodeImpl<I+1>(fbb, types, values, args);
 }
 
 template <int I, class T>
@@ -419,6 +430,15 @@ vdecodeImpl(const ::flatbuffers::Vector<uint8_t>* types,
             T& arg, Args&... args) {
   vdecodeImpl<I>(types, values, arg);
   vdecodeImpl<I+1>(types, values, args...);
+}
+
+template <int I, class T, class... Args>
+inline void
+vdecodeImpl(const ::flatbuffers::Vector<uint8_t>* types,
+            const ::flatbuffers::Vector<flatbuffers::Offset<void>>* values,
+            std::tuple<Args...>& args) {
+  vdecodeImpl<I>(types, values, std::get<I>(args));
+  vdecodeImpl<I+1>(types, values, args);
 }
 
 template <int I, class T>
@@ -441,23 +461,51 @@ vdecodeImpl(::flatbuffers::FlatBufferBuilder& fbb,
   vdecodeImpl<I+1>(fbb, types, values, args...);
 }
 
+template <int I, class T, class... Args>
+inline void
+vdecodeImpl(::flatbuffers::FlatBufferBuilder& fbb,
+            const std::vector<uint8_t>& types,
+            const std::vector<flatbuffers::Offset<void>>& values,
+            std::tuple<Args...>& args) {
+  vdecodeImpl<I>(fbb, types, values, std::get<I>(args));
+  vdecodeImpl<I+1>(fbb, types, values, args);
+}
+
 } // namespace detail
 
-// Tuple encoding
+// Tuple variant encoding
 template <class... Args>
 inline ::flatbuffers::Offset<fbs::Tuple>
 vencode(::flatbuffers::FlatBufferBuilder& fbb, const Args&... args) {
   std::vector<uint8_t> types;
   std::vector<flatbuffers::Offset<void>> values;
-  detail::vencodeImpl(fbb, types, values, args...);
+  detail::vencodeImpl<0>(fbb, types, values, args...);
+  return fbs::CreateTupleDirect(fbb, &types, &values);
+}
+
+// Tuple variant decoding
+template <class... Args>
+inline void
+vdecode(const fbs::Tuple* ptr, Args&... args) {
+  detail::vdecodeImpl<0>(ptr->value_type(), ptr->value(), args...);
+}
+
+// Tuple encoding
+template <class... Args>
+inline ::flatbuffers::Offset<fbs::Tuple>
+encode(::flatbuffers::FlatBufferBuilder& fbb,
+       const std::tuple<Args...>& value) {
+  std::vector<uint8_t> types;
+  std::vector<flatbuffers::Offset<void>> values;
+  detail::vencodeImpl<0>(fbb, types, values, value);
   return fbs::CreateTupleDirect(fbb, &types, &values);
 }
 
 // Tuple decoding
 template <class... Args>
 inline void
-vdecode(const fbs::Tuple* ptr, Args&... args) {
-  detail::vdecodeImpl<0>(ptr->value_type(), ptr->value(), args...);
+decode(const fbs::Tuple* ptr, std::tuple<Args...>& value) {
+  detail::vdecodeImpl<0>(ptr->value_type(), ptr->value(), value);
 }
 
 } // namespace ftt

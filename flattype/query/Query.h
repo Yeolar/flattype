@@ -18,8 +18,11 @@
 
 #include "flattype/CommonIDLs.h"
 #include "flattype/Wrapper.h"
+#include "flattype/query/Operation.h"
 
 namespace ftt {
+
+std::string toDebugString(const fbs::Operation* op);
 
 class Query : public Wrapper<fbs::Query> {
  public:
@@ -41,10 +44,30 @@ class Query : public Wrapper<fbs::Query> {
   uint64_t getKey() const;
   std::string getURI() const;
 
-  const fbs::Operation* getOperation(size_t i) const;
   size_t getOperationCount() const;
+
+  const fbs::Operation* getOperation(size_t i) const;
+  template <class... Args>
+  void getOperation(size_t i, fbs::Op& cmd, Args&... args) const;
+  template <class... Args>
+  void getOperation(size_t i, Operation<Args...>& o) const;
+
   size_t getBegin() const;
   size_t getEnd() const;
 };
+
+template <class... Args>
+void Query::getOperation(size_t i, fbs::Op& cmd, Args&... args) const {
+  auto op = getOperation(i);
+  cmd = op->cmd();
+  vdecode(op->params(), args...);
+}
+
+template <class... Args>
+void Query::getOperation(size_t i, Operation<Args...>& o) const {
+  auto op = getOperation(i);
+  o.cmd = op->cmd();
+  decode(op->params(), o.params);
+}
 
 } // namespace ftt

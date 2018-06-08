@@ -405,7 +405,8 @@ vencodeImpl(::flatbuffers::FlatBufferBuilder& fbb,
 }
 
 template <int I, class... Args>
-inline typename std::enable_if<I < sizeof...(Args)>::type
+inline typename std::enable_if<
+  I < std::tuple_size<std::tuple<Args...>>::value>::type
 vencodeImpl(::flatbuffers::FlatBufferBuilder& fbb,
             std::vector<uint8_t>& types,
             std::vector<flatbuffers::Offset<void>>& values,
@@ -415,7 +416,8 @@ vencodeImpl(::flatbuffers::FlatBufferBuilder& fbb,
 }
 
 template <int I, class... Args>
-inline typename std::enable_if<I >= sizeof...(Args)>::type
+inline typename std::enable_if<
+  I >= std::tuple_size<std::tuple<Args...>>::value>::type
 vencodeImpl(::flatbuffers::FlatBufferBuilder&,
             std::vector<uint8_t>&,
             std::vector<flatbuffers::Offset<void>>&,

@@ -414,6 +414,14 @@ vencodeImpl(::flatbuffers::FlatBufferBuilder& fbb,
   vencodeImpl<I+1>(fbb, types, values, args);
 }
 
+template <int I, class... Args>
+inline typename std::enable_if<I >= sizeof...(Args)>::type
+vencodeImpl(::flatbuffers::FlatBufferBuilder&,
+            std::vector<uint8_t>&,
+            std::vector<flatbuffers::Offset<void>>&,
+            const std::tuple<Args...>&) {
+}
+
 template <int I, class T>
 inline void
 vdecodeImpl(const ::flatbuffers::Vector<uint8_t>* types,

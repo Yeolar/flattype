@@ -22,7 +22,10 @@
 
 namespace ftt {
 
-std::string toDebugString(const fbs::Operation* op);
+typedef const char* (*CmdNameGetter)(uint32_t);
+
+std::string toDebugString(const fbs::Operation* op,
+                          CmdNameGetter func = nullptr);
 
 class Query : public Wrapper<fbs::Query> {
  public:
@@ -39,6 +42,8 @@ class Query : public Wrapper<fbs::Query> {
   Query(Query&&) = default;
   Query& operator=(Query&&) = default;
 
+  void setCmdNameGetter(CmdNameGetter func);
+
   std::string toDebugString() const override;
 
   uint64_t getKey() const;
@@ -54,7 +59,14 @@ class Query : public Wrapper<fbs::Query> {
 
   size_t getBegin() const;
   size_t getEnd() const;
+
+ private:
+  CmdNameGetter cmdNameGetter_{nullptr};
 };
+
+inline void Query::setCmdNameGetter(CmdNameGetter func) {
+  cmdNameGetter_ = func;
+}
 
 template <class... Args>
 void Query::getOperation(size_t i, uint32_t& cmd, Args&... args) const {

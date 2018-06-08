@@ -21,12 +21,18 @@
 
 namespace ftt {
 
-std::string toDebugString(const fbs::Operation* op) {
+std::string toDebugString(const fbs::Operation* op, CmdNameGetter func) {
   std::string out;
   if (!op) {
     return "{}";
   }
-  acc::toAppend("{ cmd:", op->cmd(),
+  std::string cmd;
+  if (func) {
+    cmd = func(op->cmd());
+  } else {
+    cmd = acc::to<std::string>(op->cmd());
+  }
+  acc::toAppend("{ cmd:", cmd,
                 ", params:", Tuple(op->params()).toDebugString(),
                 " }",
                 &out);
@@ -46,7 +52,7 @@ std::string Query::toDebugString() const {
   size_t e = std::min(getEnd(), getOperationCount());
   for (size_t i = b; i < e; i++) {
     acc::toAppend(i > b ? ", " : "",
-                  ftt::toDebugString(getOperation(i)),
+                  ftt::toDebugString(getOperation(i), cmdNameGetter_),
                   &out);
   }
   acc::toAppend("] }", &out);

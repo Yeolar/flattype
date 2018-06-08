@@ -18,6 +18,7 @@
 
 #include "flattype/Builder.h"
 #include "flattype/CommonIDLs.h"
+#include "flattype/Encoding.h"
 #include "flattype/query/Query.h"
 
 namespace ftt {

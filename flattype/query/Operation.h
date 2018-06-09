@@ -19,6 +19,7 @@
 #include "accelerator/Conv.h"
 #include "flattype/CommonIDLs.h"
 #include "flattype/Wrapper.h"
+#include "flattype/idl/query_generated.h"
 
 namespace ftt {
 
@@ -31,6 +32,10 @@ struct Operation {
     : cmd(op), params(args...) {}
   Operation(uint32_t op, Args&&... args)
     : cmd(op), params(args...) {}
+  Operation(ftt::fbs::Operation* op)
+    : cmd(op->cmd()) {
+    decode(op->params(), params);
+  }
 };
 
 template <class Op, class... Args>

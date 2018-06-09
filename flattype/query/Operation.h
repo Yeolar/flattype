@@ -18,6 +18,7 @@
 
 #include "accelerator/Conv.h"
 #include "flattype/CommonIDLs.h"
+#include "flattype/Encoding.h"
 #include "flattype/Wrapper.h"
 #include "flattype/idl/query_generated.h"
 
@@ -32,7 +33,7 @@ struct Operation {
     : cmd(op), params(args...) {}
   Operation(uint32_t op, Args&&... args)
     : cmd(op), params(args...) {}
-  Operation(ftt::fbs::Operation* op)
+  Operation(const ftt::fbs::Operation* op)
     : cmd(op->cmd()) {
     decode(op->params(), params);
   }

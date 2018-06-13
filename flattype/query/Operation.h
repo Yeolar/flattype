@@ -32,7 +32,7 @@ struct Operation {
   Operation(uint32_t op, const Args&... args)
     : cmd(op), params(args...) {}
   Operation(uint32_t op, Args&&... args)
-    : cmd(op), params(args...) {}
+    : cmd(op), params(std::forward<Args>(args)...) {}
   Operation(const ftt::fbs::Operation* op)
     : cmd(op->cmd()) {
     decode(op->params(), params);

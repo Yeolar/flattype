@@ -29,6 +29,8 @@ struct Operation {
   uint32_t cmd;
   std::tuple<Args...> params;
 
+  Operation(uint32_t op, const Args&... args)
+    : cmd(op), params(args...) {}
   Operation(uint32_t op, Args&&... args)
     : cmd(op), params(std::forward<Args>(args)...) {}
   Operation(const ftt::fbs::Operation* op)
@@ -36,6 +38,12 @@ struct Operation {
     decode(op->params(), params);
   }
 };
+
+template <class Op, class... Args>
+typename std::enable_if<std::is_enum<Op>::value, Operation<Args...>>::type
+makeOperation(Op op, const Args&... args) {
+  return Operation<Args...>(acc::to<uint32_t>(op), args...);
+}
 
 template <class Op, class... Args>
 typename std::enable_if<std::is_enum<Op>::value, Operation<Args...>>::type

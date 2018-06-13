@@ -49,10 +49,10 @@ class Builder {
 
   virtual void finish() = 0;
 
-  template <class FTW>
-  FTW toWrapper() {
+  template <class FTW, class... Args>
+  FTW toWrapper(Args&&... args) {
     finish();
-    return FTW(detachedData());
+    return FTW(detachedData(), std::forward<Args>(args)...);
   }
 
   const uint8_t* data() const {

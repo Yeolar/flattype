@@ -63,7 +63,9 @@ class QueryBuilder : public Builder {
 
   void finish() override;
 
-  Query toQuery() { return toWrapper<Query>(); }
+  Query toQuery(CmdNameGetter func = nullptr) {
+    return toWrapper<Query>(func);
+  }
 
  private:
   static std::atomic<uint64_t> uniqueKey_;

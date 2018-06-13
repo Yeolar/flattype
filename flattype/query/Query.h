@@ -29,12 +29,15 @@ std::string toDebugString(const fbs::Operation* op,
 
 class Query : public Wrapper<fbs::Query> {
  public:
-  Query(const fbs::Query* query) : Wrapper(query) {}
+  Query(const fbs::Query* query, CmdNameGetter func = nullptr)
+    : Wrapper(query), cmdNameGetter_(func) {}
 
-  explicit Query(const uint8_t* data)
-    : Wrapper(data) {}
-  explicit Query(::flatbuffers::DetachedBuffer&& data)
-    : Wrapper(std::move(data)) {}
+  explicit Query(const uint8_t* data,
+                 CmdNameGetter func = nullptr)
+    : Wrapper(data), cmdNameGetter_(func) {}
+  explicit Query(::flatbuffers::DetachedBuffer&& data,
+                 CmdNameGetter func = nullptr)
+    : Wrapper(std::move(data)), cmdNameGetter_(func) {}
 
   Query(const Query&) = delete;
   Query& operator=(const Query&) = delete;

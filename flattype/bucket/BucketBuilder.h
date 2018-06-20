@@ -44,6 +44,9 @@ class BucketBuilder : public Builder {
   const std::vector<std::string>& getFields() const;
   void setFields(const std::vector<std::string>& fields);
 
+  bool isColumnar() const;
+  void setColumnar(bool columnar);
+
   void buildMatrix(FBBFunc<fbs::Matrix>&& builder);
 
   void finish() override;
@@ -54,6 +57,7 @@ class BucketBuilder : public Builder {
   uint16_t bid_{0};
   std::string name_;
   std::vector<std::string> fields_;
+  bool columnar_{false};
   ::flatbuffers::Offset<fbs::Matrix> matrix_;
 };
 

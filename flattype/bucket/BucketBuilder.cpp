@@ -42,6 +42,14 @@ void BucketBuilder::setFields(const std::vector<std::string>& fields) {
   fields_ = fields;
 }
 
+bool BucketBuilder::isColumnar() const {
+  return columnar_;
+}
+
+void BucketBuilder::setColumnar(bool columnar) {
+  columnar_ = columnar;
+}
+
 void BucketBuilder::buildMatrix(FBBFunc<fbs::Matrix>&& builder) {
   matrix_ = builder(fbb_.get());
 }

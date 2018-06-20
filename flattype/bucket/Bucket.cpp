@@ -16,6 +16,7 @@
 
 #include "accelerator/Conv.h"
 #include "accelerator/String.h"
+#include "flattype/matrix/ColumnarMatrix.h"
 #include "flattype/matrix/Matrix.h"
 #include "flattype/bucket/Bucket.h"
 
@@ -29,7 +30,9 @@ std::string Bucket::toDebugString() const {
   acc::toAppend("{ name:", getName(),
                 ", bid:", getBID(),
                 ", fields:", acc::join(',', getFields()),
-                ", matrix:", Matrix(getMatrix()).toDebugString(),
+                ", matrix:", isColumnar()
+                              ? ColumnarMatrix(getMatrix()).toDebugString()
+                              : Matrix(getMatrix()).toDebugString(),
                 " }",
                 &out);
   return out;
@@ -55,6 +58,10 @@ std::vector<std::string> Bucket::getFields() const {
 
 const fbs::Matrix* Bucket::getMatrix() const {
   return ptr_ ? ptr_->matrix() : nullptr;
+}
+
+bool Bucket::isColumnar() const {
+  return ptr_ ? ptr_->columnar() : false;
 }
 
 } // namespace ftt

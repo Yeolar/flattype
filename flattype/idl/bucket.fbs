@@ -9,6 +9,7 @@ table Bucket {
     name: string;
     matrix: Matrix;
     fields: [string];
+    columnar: bool;
 }
 
 root_type Bucket;

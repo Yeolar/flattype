@@ -42,6 +42,7 @@ class Bucket : public Wrapper<fbs::Bucket> {
   std::string getName() const;
   std::vector<std::string> getFields() const;
   const fbs::Matrix* getMatrix() const;
+  bool isColumnar() const;
 };
 
 } // namespace ftt
